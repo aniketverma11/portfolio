@@ -5,11 +5,11 @@ import MiddleFile from './middle/MiddleFile.js'
 
 const AllFileImport = () => {
     return (
-        <>
+        <div style={{ backgroundColor: "white" }}>
             <Header />
             <Home />
             <MiddleFile />
-        </>
+        </div>
     )
 }
 
