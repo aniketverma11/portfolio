@@ -1,0 +1,22 @@
+.app {
+    text-align: center;
+}
+
+
+.main-section {
+    width: 100%;
+    background-color: whitesmoke;
+    border-bottom-left-radius: 110px;
+    border-bottom-right-radius: 110px;
+}
+
+.content-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.about-section {
+    color: black;
+}
