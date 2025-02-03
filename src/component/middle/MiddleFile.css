@@ -1,49 +1,65 @@
-.middleMainBox {
-    background-color: white;
-    padding: 1.5rem 0;
-    min-height: 40vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.middleMainBoxChild {
-    width: 100%;
-    height: auto;
-    border: 2px solid whitesmoke;
+.slider-container {
+    width: 100vw;
     overflow: hidden;
+    position: relative;
+    background: whitesmoke;
+    border-bottom-left-radius: 110px;
+    border-bottom-right-radius: 110px;
 }
 
-.middleMainBoxChild ul {
-    height: auto;
+.slider {
     display: flex;
-    flex-wrap: wrap;
+    width: 600%;
+}
+
+.slide {
+    width: 100vw;
+    flex-shrink: 0;
+    display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    background-color: whitesmoke;
+    padding: 5vh 0;
+}
+
+.slide ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.middleMainBoxChild ul li {
-    font-size: 2vh;
-    margin: 0.5rem;
-    padding: 0.5rem 1rem;
+.slide ul li {
+    font-size: 3rem;
+    padding: 40px;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     text-align: center;
-    background-color: #ffffff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    flex: 1 1 auto;
-    min-width: 100px;
 }
 
-@media (max-width: 768px) {
-    .middleMainBoxChild ul {
-        flex-direction: column;
-    }
 
-    .middleMainBoxChild ul li {
-        width: 80%;
+
+@media (max-width: 768px) {
+    .slide ul li {
+        font-size: 2rem;
+        padding: 30px;
+        background: #fff;
+        border: 2px solid #ddd;
+        border-radius: 20px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .slide ul li {
+        font-size: 1rem;
+        padding: 20px;
+        background: #fff;
+        border: 2px solid #ddd;
+        border-radius: 20px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        text-align: center;
     }
 }
