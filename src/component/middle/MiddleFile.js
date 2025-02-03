@@ -13,7 +13,6 @@ const MiddleFile = () => {
         const slideCount = slides.length;
         let index = 0;
 
-        // Clone slides based on the number of slides
         const slidesArray = Array.from(slides);
         slidesArray.forEach(slide => {
             const clonedSlide = slide.cloneNode(true);
