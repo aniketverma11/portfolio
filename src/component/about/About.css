@@ -1,0 +1,8 @@
+.aboutMainBox {
+    height: 65vh;
+    width: 100%;
+    padding-top: 2%;
+    justify-items: center;
+    align-items: center;
+    background-color: white;
+}
