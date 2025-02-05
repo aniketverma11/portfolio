@@ -1,7 +1,7 @@
 import React from 'react'
 import Header from './header/Header.js'
 import Home from './homes/Home.js'
-import MiddleFile from './middle/MiddleFile.js'
+import SliderFile from './slider/SliderFile.js'
 import About from './about/About.js'
 import './AllfileImport.css'
 
@@ -14,7 +14,7 @@ const AllFileImport = () => {
                 </header>
                 <section className="main-section">
                     <Home />
-                    <MiddleFile />
+                    <SliderFile />
                 </section>
                 <section className="about-section">
                     <About />
