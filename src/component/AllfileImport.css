@@ -6,8 +6,8 @@
 .main-section {
     width: 100%;
     background-color: whitesmoke;
-    border-bottom-left-radius: 110px;
-    border-bottom-right-radius: 110px;
+    border-bottom-left-radius: 130px;
+    border-bottom-right-radius: 130px;
 }
 
 .content-container {
