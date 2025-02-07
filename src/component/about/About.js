@@ -15,6 +15,7 @@ const About = () => {
                         <h1>Collaborate with brands and agencies to create impactful results.</h1>
                     </div>
                 </div>
+                <hr />
                 <div className='aboutMainBoxBottom'>
                     <ul>
                         <li><FaUikit className='icon' /></li>
@@ -37,7 +38,7 @@ const About = () => {
                         <li><p>Bringing your vision to life with the latest technology and design trends.</p></li>
                     </ul>
                 </div>
-            </div>
+            </div >
         </>
     )
 }

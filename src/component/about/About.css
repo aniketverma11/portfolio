@@ -63,6 +63,11 @@
     box-sizing: border-box;
 }
 
+.aboutMainBox hr {
+    color: gray;
+    width: 65%;
+}
+
 .aboutMainBoxTop {
     height: 35vh;
     width: 65%;
@@ -70,7 +75,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    /* background-color: aquamarine; */
 }
 
 .headdingBox {
@@ -82,6 +86,7 @@
 }
 
 .aboutMainBoxBottom {
+    margin-top: 5%;
     height: 35vh;
     width: 65%;
     display: flex;
@@ -89,13 +94,12 @@
     align-items: center;
     flex-wrap: wrap;
     text-align: center;
-    /* background-color: blueviolet; */
+    /* background-color: aqua; */
 }
 
 .aboutMainBoxBottom ul {
     list-style: none;
     padding: 0;
-    /* background-color: antiquewhite; */
 }
 
 .aboutMainBoxBottom ul li {
@@ -111,8 +115,6 @@
 .aboutMainBoxBottom ul li p {
     font-size: 1.2rem;
 }
-
-
 
 @media (max-width: 768px) {
     .aboutMainBox {
@@ -152,6 +154,10 @@
     .aboutMainBox {
         height: auto;
         padding: 10%;
+    }
+
+    .aboutMainBox hr {
+        display: none;
     }
 
     .aboutMainBoxTop {
