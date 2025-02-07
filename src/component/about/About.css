@@ -64,7 +64,7 @@
 }
 
 .aboutMainBox hr {
-    color: gray;
+    border: 1px solid lightgray;
     width: 65%;
 }
 
