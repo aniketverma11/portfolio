@@ -4,6 +4,7 @@ import Home from './homes/Home.js'
 import SliderFile from './slider/SliderFile.js'
 import About from './about/About.js'
 import './AllfileImport.css'
+import Footer from './footer/Footer.js'
 
 const AllFileImport = () => {
     return (
@@ -18,6 +19,9 @@ const AllFileImport = () => {
                 </section>
                 <section className="about-section">
                     <About />
+                </section>
+                <section className="footer-section">
+                    <Footer />
                 </section>
             </div>
         </>
