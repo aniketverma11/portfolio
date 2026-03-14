@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Orbitron } from "next/font/google";
+import { IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import JarvisChatbot from "@/components/JarvisChatbot";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron" });
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  variable: "--font-ibm-plex-mono",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Aniket Verma | Senior Software Engineer",
@@ -19,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${inter.variable} ${orbitron.variable} font-sans antialiased bg-slate-950 text-slate-200 selection:bg-cyan-500/30 selection:text-cyan-200`}
+        className={`${inter.variable} ${ibmPlexMono.variable} font-sans antialiased selection:bg-slate-900 selection:text-white`}
       >
         {children}
         <JarvisChatbot />

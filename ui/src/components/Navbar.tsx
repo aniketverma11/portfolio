@@ -1,16 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 
 const navLinks = [
-    { name: "Mission", href: "/#hero" },
+    { name: "Home", href: "/#hero" },
     { name: "Skills", href: "/#skills" },
-    { name: "Journey", href: "/#experience" },
+    { name: "Experience", href: "/#experience" },
     { name: "Projects", href: "/#projects" },
     { name: "Blog", href: "/blog" },
-    { name: "Impact", href: "/#achievements" },
+    { name: "Results", href: "/#achievements" },
     { name: "About", href: "/#about" },
     { name: "Contact", href: "/#contact" },
 ];
@@ -29,44 +29,42 @@ export default function Navbar() {
 
     return (
         <nav
-            className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "glass py-2 shadow-lg shadow-cyan-900/10" : "bg-transparent py-4"
+            className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
+                ? "border-b border-slate-200/80 bg-slate-50/90 py-3 backdrop-blur-xl"
+                : "bg-transparent py-5"
                 }`}
         >
             <div className="container mx-auto px-4 flex justify-between items-center">
-                {/* Logo */}
                 <Link href="/" className="flex items-center gap-2 group">
-                    <div className="relative">
-                        <Shield className="w-8 h-8 text-cyan-500 group-hover:text-cyan-400 transition-colors" />
-                        <div className="absolute inset-0 bg-cyan-500/20 blur-lg rounded-full group-hover:bg-cyan-400/30 transition-all" />
-                    </div>
-                    <span className="font-orbitron font-bold text-xl tracking-wider text-slate-100 group-hover:text-cyan-400 transition-colors">
-                        AV<span className="text-cyan-500">.hq</span>
+                    <span className="font-mono text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
+                        &lt;/&gt;
+                    </span>
+                    <span className="font-mono text-lg font-semibold tracking-tight text-slate-950 transition-colors group-hover:text-slate-700">
+                        aniket.verma
                     </span>
                 </Link>
 
-                {/* Desktop Nav */}
                 <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-sm font-medium text-slate-400 hover:text-cyan-400 transition-colors uppercase tracking-widest relative group"
+                            className="text-sm font-medium text-slate-600 hover:text-slate-950 transition-colors relative group"
                         >
                             {link.name}
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan-500 transition-all duration-300 group-hover:w-full" />
+                            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-slate-900 transition-all duration-300 group-hover:w-full" />
                         </Link>
                     ))}
                     <Link
                         href="#contact"
-                        className="px-6 py-2 bg-cyan-500/10 border border-cyan-500/50 text-cyan-400 font-bold uppercase tracking-wider text-xs rounded hover:bg-cyan-500 hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(6,182,212,0.2)] hover:shadow-[0_0_20px_rgba(6,182,212,0.6)]"
+                        className="rounded-full border border-slate-900 px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-950 transition-colors hover:bg-slate-900 hover:text-white"
                     >
-                        initiate_comms
+                        Let&apos;s Talk
                     </Link>
                 </div>
 
-                {/* Mobile Menu Button */}
                 <button
-                    className="md:hidden text-slate-200 hover:text-cyan-400 transition-colors"
+                    className="md:hidden text-slate-900 transition-colors hover:text-slate-600"
                     onClick={() => setIsOpen(true)}
                 >
                     <Menu className="w-8 h-8" />
@@ -81,11 +79,11 @@ export default function Navbar() {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: "100%" }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-50 flex flex-col items-center justify-center gap-8"
+                        className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-slate-50/95 backdrop-blur-xl"
                     >
                         <button
                             onClick={() => setIsOpen(false)}
-                            className="absolute top-6 right-6 text-slate-400 hover:text-white"
+                            className="absolute top-6 right-6 text-slate-500 hover:text-slate-950"
                         >
                             <X className="w-8 h-8" />
                         </button>
@@ -94,7 +92,7 @@ export default function Navbar() {
                                 key={link.name}
                                 href={link.href}
                                 onClick={() => setIsOpen(false)}
-                                className="text-2xl font-orbitron font-bold text-slate-300 hover:text-cyan-400 transition-colors uppercase tracking-widest"
+                                className="font-mono text-2xl font-semibold text-slate-700 transition-colors hover:text-slate-950"
                             >
                                 {link.name}
                             </a>

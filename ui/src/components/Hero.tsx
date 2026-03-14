@@ -9,61 +9,92 @@ export default function Hero({ data }: { data: PersonalData }) {
     return (
         <section
             id="hero"
-            className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden"
+            className="relative flex min-h-screen items-center justify-center overflow-hidden pt-24"
         >
-            {/* Background Effects */}
             <div className="absolute inset-0 z-0">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-cyan-900/20 blur-[120px] rounded-full mix-blend-screen opacity-50" />
-                <div className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-blue-900/10 blur-[100px] rounded-full mix-blend-screen opacity-50" />
+                <div className="absolute left-1/2 top-24 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-slate-200/70 blur-3xl" />
+                <div className="absolute bottom-16 left-16 h-40 w-40 rounded-full border border-slate-300/70 bg-white/70" />
+                <div className="absolute right-16 top-28 h-56 w-56 rounded-3xl border border-slate-300/70 bg-slate-100/80" />
             </div>
 
-            {/* Grid Overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
-
-            <div className="container mx-auto px-4 z-10 relative text-center">
+            <div className="container relative z-10 mx-auto px-4">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
+                    className="container-frame mx-auto max-w-6xl rounded-[2rem] px-6 py-14 sm:px-10 lg:px-14"
                 >
-                    <div className="inline-block px-3 py-1 mb-6 border border-cyan-500/30 rounded-full bg-cyan-950/30 backdrop-blur-sm">
-                        <span className="text-cyan-400 text-xs font-bold tracking-[0.2em] uppercase flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                            System Online
-                        </span>
-                    </div>
+                    <div className="grid gap-12 lg:grid-cols-[1.45fr_0.9fr] lg:items-end">
+                        <div>
+                            <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-slate-300 bg-white/90 px-4 py-2">
+                                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                                <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">
+                                    Available for engineering roles
+                                </span>
+                            </div>
 
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-orbitron mb-6 leading-tight">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-100 to-slate-400 drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
-                            {personalData.name}
-                        </span>
-                    </h1>
+                            <p className="section-kicker mb-4">Senior Software Engineer</p>
+                            <h1 className="section-title mb-6 text-4xl font-semibold leading-tight text-slate-950 sm:text-6xl lg:text-7xl">
+                                {personalData.name}
+                            </h1>
+                            <h2 className="mb-6 max-w-3xl text-xl font-semibold text-slate-700 sm:text-2xl">
+                                {personalData.tagline || personalData.role}
+                            </h2>
+                            <p className="max-w-3xl text-base leading-8 text-slate-600 sm:text-lg">
+                                {personalData.mission}
+                            </p>
 
-                    <h2 className="text-lg md:text-2xl text-cyan-500 font-bold uppercase tracking-[0.3em] mb-8 text-shadow-glow">
-                        {personalData.role}
-                    </h2>
+                            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                                <a
+                                    href="#projects"
+                                    className="inline-flex items-center justify-center rounded-full bg-slate-950 px-7 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition-colors hover:bg-slate-800"
+                                >
+                                    View Projects
+                                </a>
+                                <a
+                                    href="#contact"
+                                    className="inline-flex items-center justify-center rounded-full border border-slate-300 bg-white px-7 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-slate-900 transition-colors hover:border-slate-900"
+                                >
+                                    Contact Me
+                                </a>
+                            </div>
+                        </div>
 
-                    <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl leading-relaxed mb-12 text-center px-4">
-                        {personalData.mission}
-                    </p>
+                        <div className="surface-card rounded-[1.75rem] p-6">
+                            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                                <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                                    Engineer Snapshot
+                                </span>
+                                <span className="rounded-full bg-slate-950 px-3 py-1 font-mono text-[11px] font-medium text-white">
+                                    profile.ts
+                                </span>
+                            </div>
 
-                    <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                        <a
-                            href="#projects"
-                            className="group relative px-8 py-4 bg-cyan-600 text-white font-bold uppercase tracking-widest overflow-hidden hover:bg-cyan-500 transition-all shadow-[0_0_20px_rgba(8,145,178,0.4)] hover:shadow-[0_0_40px_rgba(8,145,178,0.6)]"
-                            style={{ clipPath: "polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)" }}
-                        >
-                            <span className="relative z-10">Initialize Protocol</span>
-                            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-white/20 skew-x-12" />
-                        </a>
-
-                        <a
-                            href="#contact"
-                            className="px-8 py-4 border border-slate-700 text-slate-300 font-bold uppercase tracking-widest hover:border-cyan-500 hover:text-cyan-400 transition-colors backdrop-blur-sm bg-slate-900/50"
-                            style={{ clipPath: "polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%)" }}
-                        >
-                            Contact HQ
-                        </a>
+                            <div className="space-y-5 pt-5">
+                                <div>
+                                    <p className="font-mono text-xs uppercase tracking-[0.16em] text-slate-400">Current focus</p>
+                                    <p className="mt-2 text-sm leading-7 text-slate-700">
+                                        AI agents, enterprise workflow automation, backend systems, and production-grade web platforms.
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="font-mono text-xs uppercase tracking-[0.16em] text-slate-400">Working style</p>
+                                    <p className="mt-2 text-sm leading-7 text-slate-700">
+                                        Product-minded execution with strong ownership across architecture, delivery, and performance.
+                                    </p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3 pt-2">
+                                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                        <p className="font-mono text-xs uppercase tracking-[0.16em] text-slate-400">Primary stack</p>
+                                        <p className="mt-2 text-sm font-semibold text-slate-900">Python LangChain LangGraph FastAPI</p>
+                                    </div>
+                                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                        <p className="font-mono text-xs uppercase tracking-[0.16em] text-slate-400">Delivery focus</p>
+                                        <p className="mt-2 text-sm font-semibold text-slate-900">Scalable business systems</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </motion.div>
             </div>
@@ -72,7 +103,7 @@ export default function Hero({ data }: { data: PersonalData }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 text-cyan-500/50 animate-bounce"
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-slate-400"
             >
                 <ChevronDown className="w-8 h-8" />
             </motion.div>

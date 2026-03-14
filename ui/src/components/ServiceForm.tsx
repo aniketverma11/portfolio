@@ -47,42 +47,39 @@ export default function ServiceForm() {
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="p-8 bg-slate-900/50 border border-slate-700/50 rounded-2xl backdrop-blur-xl relative overflow-hidden group"
+            className="surface-card relative overflow-hidden rounded-[1.75rem] p-8"
         >
-            {/* Background Glow */}
-            <div className="absolute -top-24 -right-24 w-48 h-48 bg-cyan-500/10 blur-[80px] group-hover:bg-cyan-500/20 transition-all duration-700" />
-
             <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-8">
-                    <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center border border-cyan-500/30">
-                        <Send className="w-5 h-5 text-cyan-400" />
+                <div className="mb-8 flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50">
+                        <Send className="h-5 w-5 text-slate-700" />
                     </div>
                     <div>
-                        <h3 className="text-xl font-bold text-white font-orbitron">MISSION ENQUIRY</h3>
-                        <p className="text-xs text-cyan-500/70 font-orbitron tracking-widest">START NEW PROJECT</p>
+                        <h3 className="section-title text-xl font-semibold text-slate-950">Project Enquiry</h3>
+                        <p className="font-mono text-xs tracking-[0.18em] text-slate-500">START A CONVERSATION</p>
                     </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-orbitron text-slate-500 uppercase tracking-widest ml-1">Agent Name</label>
+                            <label className="ml-1 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">Name</label>
                             <input
                                 required
                                 type="text"
-                                placeholder="E.g. Tony Stark"
-                                className="w-full bg-slate-950/50 border border-slate-800 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 rounded-xl p-4 text-white outline-none transition-all placeholder:text-slate-700"
+                                placeholder="Your name"
+                                className="w-full rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-slate-900"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] font-orbitron text-slate-500 uppercase tracking-widest ml-1">Secure Email</label>
+                            <label className="ml-1 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">Email</label>
                             <input
                                 required
                                 type="email"
-                                placeholder="stark@avengers.com"
-                                className="w-full bg-slate-950/50 border border-slate-800 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 rounded-xl p-4 text-white outline-none transition-all placeholder:text-slate-700"
+                                placeholder="you@company.com"
+                                className="w-full rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-slate-900"
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             />
@@ -90,24 +87,24 @@ export default function ServiceForm() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-orbitron text-slate-500 uppercase tracking-widest ml-1">Project Classification</label>
+                        <label className="ml-1 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">Subject</label>
                         <input
                             required
                             type="text"
-                            placeholder="AI Integration / Web Platform / Mobile App"
-                            className="w-full bg-slate-950/50 border border-slate-800 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 rounded-xl p-4 text-white outline-none transition-all placeholder:text-slate-700"
+                            placeholder="Role, project, or collaboration topic"
+                            className="w-full rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-slate-900"
                             value={formData.subject}
                             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-[10px] font-orbitron text-slate-500 uppercase tracking-widest ml-1">Mission Briefing</label>
+                        <label className="ml-1 font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">Message</label>
                         <textarea
                             required
                             rows={4}
-                            placeholder="Describe your vision for the product..."
-                            className="w-full bg-slate-950/50 border border-slate-800 focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/20 rounded-xl p-4 text-white outline-none transition-all resize-none placeholder:text-slate-700"
+                            placeholder="Share the context, team need, or problem you want to solve."
+                            className="w-full resize-none rounded-2xl border border-slate-200 bg-white p-4 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-slate-900"
                             value={formData.message}
                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         />
@@ -116,11 +113,11 @@ export default function ServiceForm() {
                     <button
                         disabled={status === "loading"}
                         type="submit"
-                        className={`w-full font-orbitron font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 relative overflow-hidden group/btn ${status === "success"
-                                ? "bg-green-500/20 border border-green-500/50 text-green-400"
+                        className={`relative flex w-full items-center justify-center gap-3 rounded-full py-4 font-semibold uppercase tracking-[0.16em] transition-all ${status === "success"
+                                ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
                                 : status === "error"
-                                    ? "bg-red-500/20 border border-red-500/50 text-red-500"
-                                    : "bg-cyan-600 hover:bg-cyan-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.3)]"
+                                    ? "border border-red-200 bg-red-50 text-red-600"
+                                    : "bg-slate-950 text-white hover:bg-slate-800"
                             }`}
                     >
                         {status === "loading" && <Loader2 className="w-5 h-5 animate-spin" />}
@@ -129,12 +126,12 @@ export default function ServiceForm() {
 
                         <span className="relative z-10">
                             {status === "success"
-                                ? "TRANSMISSION SUCCESSFUL"
+                                ? "Message Sent"
                                 : status === "loading"
-                                    ? "ESTABLISHING UPLINK..."
+                                    ? "Sending..."
                                     : status === "error"
-                                        ? "TRANSMISSION FAILED"
-                                        : "INITIATE TRANSMISSION"}
+                                        ? "Submission Failed"
+                                        : "Send Message"}
                         </span>
 
                         {status === "idle" && (
@@ -143,8 +140,8 @@ export default function ServiceForm() {
                     </button>
 
                     {status === "success" && (
-                        <p className="text-[10px] text-green-500/80 font-orbitron text-center animate-pulse">
-                            A COPY OF THIS BRIEF HAS BEEN SENT TO YOUR INBOX.
+                        <p className="text-center font-mono text-[10px] text-emerald-600">
+                            Your enquiry was submitted successfully.
                         </p>
                     )}
                 </form>

@@ -48,9 +48,9 @@ export default function BlogPostClient({
 
     if (loading) {
         return (
-            <main className="min-h-screen bg-slate-950 text-slate-200 flex items-center justify-center">
+            <main className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
                 <div className="text-center">
-                    <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-cyan-500 border-r-transparent mb-4"></div>
+                    <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-slate-900 border-r-transparent mb-4"></div>
                     <p className="text-lg">Loading blog post...</p>
                 </div>
             </main>
@@ -59,15 +59,15 @@ export default function BlogPostClient({
 
     if (error || !post) {
         return (
-            <main className="min-h-screen bg-slate-950 text-slate-200">
+            <main className="min-h-screen bg-slate-50 text-slate-900">
                 <Navbar />
                 <div className="flex items-center justify-center min-h-[80vh]">
                     <div className="text-center">
                         <h1 className="text-4xl font-bold text-red-500 mb-4">Error</h1>
-                        <p className="text-slate-400 mb-6">{error || 'Blog post not found'}</p>
+                        <p className="text-slate-500 mb-6">{error || 'Blog post not found'}</p>
                         <button
                             onClick={() => router.push('/#blog')}
-                            className="px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors"
+                            className="rounded-full bg-slate-950 px-6 py-3 text-white transition-colors hover:bg-slate-800"
                         >
                             Back to Blog
                         </button>
@@ -79,55 +79,42 @@ export default function BlogPostClient({
     }
 
     return (
-        <main className="min-h-screen bg-slate-950 text-slate-200">
+        <main className="page-shell min-h-screen bg-slate-50 text-slate-900">
             <Navbar />
 
-            {/* Background Effects */}
-            <div className="fixed inset-0 -z-10">
-                <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 opacity-50"></div>
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-            </div>
-
             <article className="max-w-4xl mx-auto px-4 py-24">
-                {/* Back Button */}
                 <button
                     onClick={() => router.push('/#blog')}
-                    className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 mb-8 transition-colors group"
+                    className="group mb-8 inline-flex items-center gap-2 text-slate-600 transition-colors hover:text-slate-950"
                 >
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                     Back to Blog
                 </button>
 
-                {/* Featured Image */}
                 {post.featured_image_url && (
-                    <div className="relative h-96 rounded-2xl overflow-hidden mb-8">
+                    <div className="relative mb-8 h-96 overflow-hidden rounded-[2rem] border border-slate-200 bg-white">
                         <img
                             src={post.featured_image_url}
                             alt={post.title}
                             className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent"></div>
+                        <div className="absolute inset-0 bg-slate-950/10"></div>
                     </div>
                 )}
 
-                {/* Category Badge */}
-                <span className="inline-block px-4 py-2 bg-cyan-500/20 text-cyan-400 text-sm font-semibold rounded-full mb-6">
+                <span className="mb-6 inline-block rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700">
                     {post.category}
                 </span>
 
-                {/* Title */}
-                <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 font-[family-name:var(--font-orbitron)] leading-tight">
+                <h1 className="section-title mb-6 text-5xl font-semibold leading-tight text-slate-950 md:text-6xl">
                     {post.title}
                 </h1>
 
-                {/* Excerpt */}
-                <p className="text-xl text-slate-400 mb-8 leading-relaxed">
+                <p className="mb-8 text-xl leading-relaxed text-slate-600">
                     {post.excerpt}
                 </p>
 
-                {/* Meta Info */}
-                <div className="flex flex-wrap items-center gap-6 text-sm text-slate-400 mb-8 pb-8 border-b border-slate-800">
+                <div className="mb-8 flex flex-wrap items-center gap-6 border-b border-slate-200 pb-8 text-sm text-slate-500">
                     <span className="flex items-center gap-2">
                         <Calendar size={18} />
                         {formatDate(post.published_at || post.created_at)}
@@ -140,16 +127,15 @@ export default function BlogPostClient({
                         <Eye size={18} />
                         {post.views} views
                     </span>
-                    <span className="text-cyan-400 font-medium">By {post.author}</span>
+                    <span className="font-medium text-slate-900">By {post.author}</span>
                 </div>
 
-                {/* Tags */}
                 {post.tags && post.tags.length > 0 && (
                     <div className="flex flex-wrap gap-3 mb-8">
                         {post.tags.map((tag, idx) => (
                             <span
                                 key={idx}
-                                className="inline-flex items-center gap-2 px-4 py-2 glass text-cyan-400 text-sm rounded-lg hover:bg-cyan-500/10 transition-colors"
+                                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600"
                             >
                                 <Tag size={16} />
                                 {tag}
@@ -158,17 +144,15 @@ export default function BlogPostClient({
                     </div>
                 )}
 
-                {/* Content */}
                 <div
-                    className="blog-content text-lg"
+                    className="blog-content surface-card rounded-[2rem] p-8 text-lg"
                     dangerouslySetInnerHTML={{ __html: post.content || '' }}
                 />
 
-                {/* Share Section */}
-                <div className="mt-12 pt-8 border-t border-slate-800">
+                <div className="mt-12 border-t border-slate-200 pt-8">
                     <button
                         onClick={() => router.push('/#blog')}
-                        className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300"
+                        className="rounded-full bg-slate-950 px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-slate-800"
                     >
                         Read More Articles
                     </button>

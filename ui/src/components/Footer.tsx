@@ -3,13 +3,13 @@ import React from "react";
 
 export default function Footer() {
     return (
-        <footer className="py-8 bg-slate-950 border-t border-slate-900 text-center relative z-10">
+        <footer className="relative z-10 border-t border-slate-200 bg-slate-50 py-8 text-center">
             <div className="container mx-auto px-4">
-                <p className="text-slate-500 font-mono text-sm">
-                    &copy; {new Date().getFullYear()} Aniket Verma. All Systems Operational.
+                <p className="font-mono text-sm text-slate-500">
+                    &copy; {new Date().getFullYear()} Aniket Verma. Built for serious engineering opportunities.
                 </p>
-                <p className="text-slate-600 text-xs mt-2 uppercase tracking-widest">
-                    Designed with Avengers Initiative Protocol
+                <p className="mt-2 text-xs uppercase tracking-[0.18em] text-slate-400">
+                    Software Engineer Portfolio
                 </p>
             </div>
         </footer>

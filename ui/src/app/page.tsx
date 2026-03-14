@@ -55,9 +55,9 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-slate-950 text-slate-200 flex items-center justify-center">
+      <main className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-cyan-500 border-r-transparent mb-4"></div>
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-slate-900 border-r-transparent mb-4"></div>
           <p className="text-lg">Loading portfolio...</p>
         </div>
       </main>
@@ -66,17 +66,17 @@ export default function Home() {
 
   if (error || !personalData) {
     return (
-      <main className="min-h-screen bg-slate-950 text-slate-200 flex items-center justify-center">
+      <main className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-500 mb-4">Error Loading Portfolio</h1>
-          <p className="text-slate-400">{error || 'Failed to load data'}</p>
+          <p className="text-slate-500">{error || 'Failed to load data'}</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-200 selection:bg-cyan-500/30">
+    <main className="page-shell min-h-screen bg-slate-50 text-slate-900">
       <Navbar />
       <Hero data={personalData} />
       <Skills data={skills} />

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { Cpu, Database, Cloud, Code, Terminal, Zap } from "lucide-react";
+import { Cpu, Database, Cloud, Code, Terminal } from "lucide-react";
 import { Skill } from "@/lib/types";
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -15,9 +15,7 @@ const iconMap: Record<string, React.ReactNode> = {
 export default function Skills({ data }: { data: Skill[] }) {
     const skills = data;
     return (
-        <section id="skills" className="py-24 relative bg-slate-950/50">
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-900 to-transparent" />
-
+        <section id="skills" className="relative py-24">
             <div className="container mx-auto px-4">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -25,12 +23,12 @@ export default function Skills({ data }: { data: Skill[] }) {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-4xl md:text-5xl font-black font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-4 inline-flex items-center gap-3">
-                        <Zap className="w-8 h-8 text-yellow-500 fill-yellow-500" />
-                        TECH ARMORY
+                    <p className="section-kicker mb-3">Core Stack</p>
+                    <h2 className="section-title text-4xl font-semibold text-slate-950 md:text-5xl">
+                        Skills I use to ship production software
                     </h2>
-                    <p className="text-slate-400 uppercase tracking-widest text-sm">
-                        Stark Industries Level Clearance
+                    <p className="mx-auto mt-4 max-w-3xl text-base leading-7 text-slate-600">
+                        Full-stack engineering with a strong backend foundation, cloud delivery, and applied AI systems.
                     </p>
                 </motion.div>
 
@@ -43,15 +41,13 @@ export default function Skills({ data }: { data: Skill[] }) {
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
                             whileHover={{ scale: 1.02 }}
-                            className="group relative p-6 bg-slate-900/40 border border-slate-800 hover:border-cyan-500/50 transition-all rounded-xl backdrop-blur-sm overflow-hidden"
+                            className="surface-card group relative overflow-hidden rounded-[1.5rem] p-6 transition-all"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
                             <div className="flex items-center gap-4 mb-4 relative z-10">
-                                <div className="p-3 bg-slate-800 rounded-lg group-hover:bg-cyan-500/20 group-hover:text-cyan-400 transition-colors text-slate-300">
+                                <div className="rounded-2xl bg-slate-100 p-3 text-slate-700 transition-colors group-hover:bg-slate-900 group-hover:text-white">
                                     {iconMap[skill.category] || <Cpu />}
                                 </div>
-                                <h3 className="text-xl font-bold font-orbitron text-slate-200 group-hover:text-cyan-300 transition-colors">
+                                <h3 className="section-title text-xl font-semibold text-slate-900">
                                     {skill.category}
                                 </h3>
                             </div>
@@ -60,7 +56,7 @@ export default function Skills({ data }: { data: Skill[] }) {
                                 {skill.items.map((item) => (
                                     <span
                                         key={item}
-                                        className="px-3 py-1 text-xs font-mono text-cyan-500 bg-cyan-950/30 border border-cyan-900/50 rounded-md group-hover:border-cyan-500/30 transition-colors"
+                                        className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-mono text-slate-700 transition-colors group-hover:border-slate-300"
                                     >
                                         {item}
                                     </span>

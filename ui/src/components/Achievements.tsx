@@ -6,11 +6,14 @@ import { Achievement } from "@/lib/types";
 export default function Achievements({ data }: { data: Achievement[] }) {
     const achievements = data;
     return (
-        <section id="achievements" className="py-24 bg-gradient-to-b from-transparent to-green-900/10">
+        <section id="achievements" className="py-24">
             <div className="container mx-auto px-4">
-                <h2 className="text-4xl md:text-5xl font-black font-orbitron text-center text-white mb-16">
-                    <span className="text-green-500">HULK</span> SMASH STATS
-                </h2>
+                <div className="mb-16 text-center">
+                    <p className="section-kicker mb-3">Results</p>
+                    <h2 className="section-title text-4xl font-semibold text-slate-950 md:text-5xl">
+                        Numbers that support the execution
+                    </h2>
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {achievements.map((item, index) => (
@@ -20,15 +23,15 @@ export default function Achievements({ data }: { data: Achievement[] }) {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ type: "spring", bounce: 0.5, delay: index * 0.2 }}
-                            className="text-center p-8 border border-green-900/30 bg-green-950/10 rounded-2xl backdrop-blur-sm hover:border-green-500/50 transition-colors"
+                            className="surface-card rounded-[1.75rem] p-8 text-center transition-colors"
                         >
-                            <div className="text-6xl md:text-7xl font-black text-green-500 font-orbitron mb-2">
+                            <div className="section-title mb-2 text-6xl font-semibold text-slate-950 md:text-7xl">
                                 {item.metric}
                             </div>
-                            <div className="text-xl font-bold text-white uppercase tracking-widest mb-4">
+                            <div className="mb-4 font-mono text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
                                 {item.label}
                             </div>
-                            <p className="text-slate-400">
+                            <p className="text-slate-600">
                                 {item.description}
                             </p>
                         </motion.div>

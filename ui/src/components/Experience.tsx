@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { Hammer } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
 import { Experience as ExperienceType } from "@/lib/types";
 
 export default function Experience({ data }: { data: ExperienceType[] }) {
@@ -13,20 +13,23 @@ export default function Experience({ data }: { data: ExperienceType[] }) {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="mb-16 flex items-center gap-4"
+                    className="mb-16 flex items-start gap-4"
                 >
-                    <Hammer className="w-10 h-10 text-red-500" />
+                    <div className="rounded-2xl border border-slate-200 bg-white p-3">
+                        <BriefcaseBusiness className="h-8 w-8 text-slate-700" />
+                    </div>
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-black font-orbitron text-white">
-                            HEROIC JOURNEY
+                        <p className="section-kicker mb-2">Experience</p>
+                        <h2 className="section-title text-4xl font-semibold text-slate-950 md:text-5xl">
+                            Work focused on business impact and technical depth
                         </h2>
-                        <p className="text-red-500 uppercase tracking-widest text-sm font-bold">
-                            Battle History & Conquests
+                        <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+                            Roles across enterprise applications, AI systems, backend engineering, and platform delivery.
                         </p>
                     </div>
                 </motion.div>
 
-                <div className="relative border-l-2 border-slate-800 ml-3 md:ml-6 space-y-12">
+                <div className="relative ml-3 space-y-10 border-l-2 border-slate-200 md:ml-6">
                     {experience.map((job, index) => (
                         <motion.div
                             key={index}
@@ -34,33 +37,36 @@ export default function Experience({ data }: { data: ExperienceType[] }) {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ delay: index * 0.1 }}
-                            className="relative pl-8 md:pl-12 group"
+                            className="group relative pl-8 md:pl-12"
                         >
-                            {/* Timeline Node */}
-                            <span className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 group-hover:border-white group-hover:scale-125 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)] group-hover:shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+                            <span className="absolute -left-[11px] top-8 h-5 w-5 rounded-full border-4 border-slate-50 bg-slate-900 transition-all group-hover:scale-110" />
 
-                            <div className="flex flex-col md:flex-row gap-2 md:items-baseline mb-2">
-                                <h3 className="text-2xl font-bold font-orbitron text-white group-hover:text-cyan-400 transition-colors">
-                                    {job.role}
-                                </h3>
-                                <span className="text-slate-500 font-mono text-sm">@ {job.company}</span>
-                                <span className="md:ml-auto text-cyan-500 text-sm font-bold uppercase tracking-wider bg-cyan-950/30 px-3 py-1 rounded">
+                            <div className="surface-card rounded-[1.75rem] p-7">
+                                <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-baseline">
+                                    <div>
+                                        <h3 className="section-title text-2xl font-semibold text-slate-950">
+                                            {job.role}
+                                        </h3>
+                                        <span className="mt-1 block text-sm font-medium text-slate-500">{job.company}</span>
+                                    </div>
+                                    <span className="md:ml-auto rounded-full border border-slate-200 bg-slate-50 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
                                     {job.period}
-                                </span>
+                                    </span>
+                                </div>
+
+                                <p className="mb-5 max-w-3xl leading-7 text-slate-600">
+                                    {job.description}
+                                </p>
+
+                                <ul className="space-y-3">
+                                    {job.achievements.map((item, i) => (
+                                        <li key={i} className="flex items-start gap-3 text-sm leading-6 text-slate-700">
+                                            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-slate-900" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
-
-                            <p className="text-slate-400 mb-4 max-w-3xl leading-relaxed">
-                                {job.description}
-                            </p>
-
-                            <ul className="space-y-2">
-                                {job.achievements.map((item, i) => (
-                                    <li key={i} className="flex items-start gap-2 text-slate-300 text-sm">
-                                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-500/50" />
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
                         </motion.div>
                     ))}
                 </div>
