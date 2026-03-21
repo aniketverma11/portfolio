@@ -43,12 +43,14 @@ export default function Experience({ data }: { data: ExperienceType[] }) {
                             <div className="surface-card relative overflow-hidden rounded-[2.5rem] p-8 md:p-10 border border-slate-200 bg-white transition-all hover:shadow-2xl hover:-translate-y-1">
                                 {/* Company Background Image Overlay */}
                                 {job.company_logo_url && (
-                                    <div className="absolute top-0 right-0 h-full w-1/3 opacity-[0.1] transition-opacity group-hover:opacity-[0.2]">
-                                        <img 
-                                            src={job.company_logo_url} 
-                                            alt="" 
-                                            className="h-full w-full object-contain object-right grayscale pointer-events-none"
-                                        />
+                                    <div className="absolute bottom-0 right-0 h-48 w-48 opacity-[0.05] transition-opacity group-hover:opacity-[0.1] pointer-events-none -mr-8 -mb-8 select-none">
+                                        <div className="h-full w-full rounded-tl-[100px] overflow-hidden bg-slate-50/50 p-10">
+                                            <img 
+                                                src={job.company_logo_url} 
+                                                alt="" 
+                                                className="h-full w-full object-contain grayscale"
+                                            />
+                                        </div>
                                     </div>
                                 )}
 
