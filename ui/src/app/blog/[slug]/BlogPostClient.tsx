@@ -1,32 +1,25 @@
-'use client';
 
-import { use, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { BlogPost } from '@/lib/types';
 import { getBlogPost } from '@/lib/api';
 import { Calendar, Clock, Eye, Tag, ArrowLeft } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-export default function BlogPostClient({
-    params,
-    initialPost = null
-}: {
-    params: Promise<{ slug: string }>,
-    initialPost?: BlogPost | null
-}) {
-    const router = useRouter();
-    const { slug } = use(params); // Unwrap the Promise
-    const [post, setPost] = useState<BlogPost | null>(initialPost);
-    const [loading, setLoading] = useState(!initialPost);
+export default function BlogPostClient() {
+    const navigate = useNavigate();
+    const { slug } = useParams<{ slug: string }>();
+    const [post, setPost] = useState<BlogPost | null>(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (initialPost) return;
+        if (!slug) return;
 
         async function fetchPost() {
             try {
-                const data = await getBlogPost(slug);
+                const data = await getBlogPost(slug as string);
                 setPost(data);
             } catch (err) {
                 console.error('Error fetching blog post:', err);
@@ -36,7 +29,7 @@ export default function BlogPostClient({
             }
         }
         fetchPost();
-    }, [slug, initialPost]);
+    }, [slug]);
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -66,7 +59,7 @@ export default function BlogPostClient({
                         <h1 className="text-4xl font-bold text-red-500 mb-4">Error</h1>
                         <p className="text-slate-500 mb-6">{error || 'Blog post not found'}</p>
                         <button
-                            onClick={() => router.push('/#blog')}
+                            onClick={() => navigate('/#blog')}
                             className="rounded-full bg-slate-950 px-6 py-3 text-white transition-colors hover:bg-slate-800"
                         >
                             Back to Blog
@@ -84,7 +77,7 @@ export default function BlogPostClient({
 
             <article className="max-w-4xl mx-auto px-4 py-24">
                 <button
-                    onClick={() => router.push('/#blog')}
+                    onClick={() => navigate('/#blog')}
                     className="group mb-8 inline-flex items-center gap-2 text-slate-600 transition-colors hover:text-slate-950"
                 >
                     <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
@@ -151,7 +144,7 @@ export default function BlogPostClient({
 
                 <div className="mt-12 border-t border-slate-200 pt-8">
                     <button
-                        onClick={() => router.push('/#blog')}
+                        onClick={() => navigate('/#blog')}
                         className="rounded-full bg-slate-950 px-8 py-3 font-semibold text-white transition-all duration-300 hover:bg-slate-800"
                     >
                         Read More Articles

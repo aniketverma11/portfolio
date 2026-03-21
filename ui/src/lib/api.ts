@@ -1,6 +1,6 @@
 import { PersonalData, Skill, Experience, Project, Achievement, BlogPost } from './types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Debug: Log the API URL being used
 console.log('API_BASE_URL:', API_BASE_URL);
@@ -10,7 +10,6 @@ export async function getPersonalData(): Promise<PersonalData> {
     console.log('Fetching from:', url);
 
     const res = await fetch(url, {
-        next: { revalidate: 60 }, // Cache for 60 seconds
         signal: AbortSignal.timeout(30000), // 30 second timeout
     });
     if (!res.ok) throw new Error('Failed to fetch personal data');
@@ -54,9 +53,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     const baseUrl = API_BASE_URL || 'http://localhost:8000/api';
 
     try {
-        const res = await fetch(`${baseUrl}/blog/`, {
-            next: { revalidate: 300 }, // Cache for 5 minutes
-        });
+        const res = await fetch(`${baseUrl}/blog/`);
         if (!res.ok) {
             console.error(`Failed to fetch blog posts: ${res.status}`);
             return [];

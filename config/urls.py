@@ -28,26 +28,15 @@ from django.views.static import serve
 import os
 
 def serve_react(request, path):
-    out_dir = settings.BASE_DIR / 'ui/out'
-    filepath = out_dir / path
+    dist_dir = settings.BASE_DIR / 'ui/dist'
+    filepath = dist_dir / path
 
-    # 1. Exact file match (e.g., /favicon.ico, /_next/static/...)
+    # 1. Exact file match (e.g., /favicon.ico, /assets/index-xxx.js)
     if path and os.path.isfile(filepath):
-        return serve(request, path, document_root=out_dir)
+        return serve(request, path, document_root=dist_dir)
 
-    # 2. Directory match - look for index.html
-    if os.path.isdir(filepath):
-        index_path = os.path.join(path, 'index.html')
-        if os.path.isfile(out_dir / index_path):
-            return serve(request, index_path, document_root=out_dir)
-
-    # 3. Next.js static route match (e.g., /blog -> blog.html)
-    html_path = path.rstrip('/') + '.html'
-    if os.path.isfile(out_dir / html_path):
-        return serve(request, html_path, document_root=out_dir)
-
-    # 4. Fallback to index.html for SPA routing
-    return serve(request, 'index.html', document_root=out_dir)
+    # 2. Fallback to index.html for SPA client-side routing
+    return serve(request, 'index.html', document_root=dist_dir)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

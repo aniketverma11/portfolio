@@ -1,8 +1,7 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 const navLinks = [
     { name: "Home", href: "/#hero" },
@@ -35,7 +34,7 @@ export default function Navbar() {
                 }`}
         >
             <div className="container mx-auto px-4 flex justify-between items-center">
-                <Link href="/" className="flex items-center gap-2 group">
+                <Link to="/" className="flex items-center gap-2 group">
                     <span className="font-mono text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
                         &lt;/&gt;
                     </span>
@@ -48,19 +47,19 @@ export default function Navbar() {
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
-                            href={link.href}
+                            to={link.href}
                             className="text-sm font-medium text-slate-600 hover:text-slate-950 transition-colors relative group"
                         >
                             {link.name}
                             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-slate-900 transition-all duration-300 group-hover:w-full" />
                         </Link>
                     ))}
-                    <Link
+                    <a
                         href="#contact"
                         className="rounded-full border border-slate-900 px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-950 transition-colors hover:bg-slate-900 hover:text-white"
                     >
                         Let&apos;s Talk
-                    </Link>
+                    </a>
                 </div>
 
                 <button

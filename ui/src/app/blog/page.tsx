@@ -1,7 +1,6 @@
-'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getBlogPosts } from '@/lib/api';
@@ -101,7 +100,7 @@ export default function BlogPage() {
                             {filteredPosts.map((post) => (
                                 <Link
                                     key={post.id}
-                                    href={`/blog/${post.slug}`}
+                                    to={`/blog/${post.slug}`}
                                     className="surface-card group flex h-full flex-col overflow-hidden rounded-[1.75rem] transition-all duration-500 hover:-translate-y-2"
                                 >
                                     <div className="relative h-48 shrink-0 overflow-hidden bg-slate-100">

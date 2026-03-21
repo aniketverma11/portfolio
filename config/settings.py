@@ -83,7 +83,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'ui/out'],
+        'DIRS': [BASE_DIR / 'ui/dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,7 +146,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'ui/out',
+    BASE_DIR / 'ui/dist',
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 

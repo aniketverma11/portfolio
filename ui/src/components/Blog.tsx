@@ -1,7 +1,6 @@
-'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { BlogPost } from '@/lib/types';
 import { Calendar, Clock, Eye, Tag } from 'lucide-react';
 
@@ -66,7 +65,7 @@ export default function Blog({ data }: BlogProps) {
                         {filteredPosts.map((post, index) => (
                             <Link
                                 key={post.id}
-                                href={`/blog/${post.slug}`}
+                                to={`/blog/${post.slug}`}
                                 className="surface-card block overflow-hidden rounded-[1.75rem] transition-all duration-500 hover:-translate-y-2"
                                 style={{
                                     animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`

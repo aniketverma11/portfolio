@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
@@ -16,7 +15,7 @@ export default function ServiceForm() {
         e.preventDefault();
         setStatus("loading");
         try {
-            const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000/api";
+            const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
             // Ensure we don't end with double slash
             const cleanBaseUrl = apiBaseUrl.endsWith("/") ? apiBaseUrl.slice(0, -1) : apiBaseUrl;
 
