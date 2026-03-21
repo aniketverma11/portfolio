@@ -1,4 +1,4 @@
-import { PersonalData, Skill, Experience, Project, Achievement, BlogPost } from './types';
+import { PersonalData, Skill, Experience, Project, Achievement, BlogPost, Certification } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -106,5 +106,23 @@ export async function getBlogCategories(): Promise<string[]> {
     if (!res.ok) throw new Error('Failed to fetch blog categories');
     const data = await res.json();
     return data.categories;
+}
+
+export async function getCertifications(): Promise<Certification[]> {
+    const res = await fetch(`${API_BASE_URL}/certifications/`);
+    if (!res.ok) throw new Error('Failed to fetch certifications');
+    const data = await res.json();
+    
+    // Rewrite incorrect media URLs for certifications
+    if (API_BASE_URL?.includes('aniketverma.xyz')) {
+        return data.map((cert: Certification) => {
+            if (cert.image_url) {
+                cert.image_url = cert.image_url.replace('http://localhost:8000', 'https://aniketverma.xyz');
+            }
+            return cert;
+        });
+    }
+    
+    return data;
 }
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, ServiceQuery, ValentineResponse
+from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, ServiceQuery, ValentineResponse, Certification
 
 class ServiceQuerySerializer(serializers.ModelSerializer):
     class Meta:
@@ -94,4 +94,19 @@ class ValentineResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ValentineResponse
         fields = ['response', 'device_model', 'message']
+
+
+class CertificationSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Certification
+        fields = ['id', 'name', 'certification_id', 'url', 'image', 'image_url', 'issued_by', 'issued_date']
+
+    def get_image_url(self, obj):
+        if obj.image:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.image.url)
+        return None
 

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PersonalDataView, SkillCategoryViewSet, ExperienceViewSet, ProjectViewSet, AchievementViewSet, BlogPostViewSet, ChatBotView, ServiceQueryView, ValentineResponseView
+from .views import PersonalDataView, SkillCategoryViewSet, ExperienceViewSet, ProjectViewSet, AchievementViewSet, BlogPostViewSet, ChatBotView, ServiceQueryView, ValentineResponseView, CertificationViewSet
 
 router = DefaultRouter()
 router.register(r'skills', SkillCategoryViewSet)
@@ -8,6 +8,7 @@ router.register(r'experience', ExperienceViewSet)
 router.register(r'projects', ProjectViewSet)
 router.register(r'achievements', AchievementViewSet)
 router.register(r'blog', BlogPostViewSet)
+router.register(r'certifications', CertificationViewSet)
 
 urlpatterns = [
     path('personal-data/', PersonalDataView.as_view(), name='personal-data'),

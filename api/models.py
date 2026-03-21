@@ -130,3 +130,14 @@ class ValentineResponse(models.Model):
 
     def __str__(self):
         return f"{self.response} from {self.ip_address} at {self.created_at}"
+
+class Certification(models.Model):
+    name = models.CharField(max_length=255)
+    certification_id = models.CharField(max_length=255, blank=True, null=True)
+    url = models.URLField(max_length=500, blank=True, null=True)
+    image = models.ImageField(upload_to='certifications/', blank=True, null=True)
+    issued_by = models.CharField(max_length=255, blank=True, null=True)
+    issued_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name

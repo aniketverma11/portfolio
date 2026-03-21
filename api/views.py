@@ -13,12 +13,12 @@ from .admin_overrides import send_brevo_query_emails
 from rest_framework.permissions import AllowAny
 from django.db.models import F
 from django.core.mail import send_mail
-from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, ServiceQuery, ValentineResponse
+from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, ServiceQuery, ValentineResponse, Certification
 import requests
 from .serializers import (
     PersonalDataSerializer, SkillCategorySerializer, ExperienceSerializer, 
     ProjectSerializer, AchievementSerializer, BlogPostListSerializer, BlogPostDetailSerializer,
-    ServiceQuerySerializer, ValentineResponseSerializer
+    ServiceQuerySerializer, ValentineResponseSerializer, CertificationSerializer
 )
 
 # Configure Gemini
@@ -51,6 +51,10 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
 class AchievementViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Achievement.objects.all()
     serializer_class = AchievementSerializer
+
+class CertificationViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Certification.objects.all()
+    serializer_class = CertificationSerializer
 
 class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     """

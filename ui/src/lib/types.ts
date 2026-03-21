@@ -67,3 +67,14 @@ export interface BlogPost {
     meta_keywords?: string;
 }
 
+export interface Certification {
+    id: number;
+    name: string;
+    certification_id: string | null;
+    url: string | null;
+    image: string | null;
+    image_url: string | null;
+    issued_by: string | null;
+    issued_date: string | null;
+}
+
