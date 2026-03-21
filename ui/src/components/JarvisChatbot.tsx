@@ -1,31 +1,24 @@
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, MessageSquareText, Terminal, Volume2, VolumeX } from "lucide-react";
+import { X, Send, Terminal, Bot, User, MessageCircle } from "lucide-react";
 
 interface Message {
     id: number;
     text: string;
-    sender: "user" | "jarvis";
+    sender: "user" | "agent";
     isStreaming?: boolean;
 }
 
-const fullTooltipText = "Need quick portfolio details? Ask here.";
+const fullTooltipText = "Have a question? Ask Aniket's assistant.";
 
 const JarvisChatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isMuted, setIsMuted] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const socketRef = useRef<WebSocket | null>(null);
-    const isMutedRef = useRef(isMuted);
-    const currentResponseRef = useRef("");
-
-    useEffect(() => {
-        isMutedRef.current = isMuted;
-    }, [isMuted]);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -35,62 +28,28 @@ const JarvisChatbot = () => {
         scrollToBottom();
     }, [messages]);
 
-    const speak = useCallback((text: string) => {
-        if (isMutedRef.current) return;
-
-        if ("speechSynthesis" in window) {
-            window.speechSynthesis.cancel();
-
-            const cleanText = text.replace(/[*#`_]/g, '');
-
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            const voices = window.speechSynthesis.getVoices();
-
-            const preferredVoice = voices.find(
-                (voice) =>
-                    voice.name.includes("Male") ||
-                    voice.name.includes("David") ||
-                    voice.name.includes("Daniel") ||
-                    voice.name.includes("Google US English")
-            );
-            if (preferredVoice) utterance.voice = preferredVoice;
-
-            utterance.pitch = 0.8;
-            utterance.rate = 1.0;
-            window.speechSynthesis.speak(utterance);
-        }
-    }, []);
-
     useEffect(() => {
         if (isOpen && !socketRef.current) {
-            // Initialize WebSocket connection
             const wsUrl = import.meta.env.VITE_WS_URL || "ws://127.0.0.1:8000/ws/chat/";
             const ws = new WebSocket(wsUrl);
             socketRef.current = ws;
-
-            ws.onopen = () => {
-                console.log("Connected to portfolio assistant");
-            };
-
 
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
 
                 if (data.type === 'start') {
                     setIsLoading(false);
-                    currentResponseRef.current = "";
                     const botMessage: Message = {
                         id: Date.now(),
                         text: "",
-                        sender: "jarvis",
+                        sender: "agent",
                         isStreaming: true
                     };
                     setMessages((prev) => [...prev, botMessage]);
                 } else if (data.type === 'chunk') {
-                    currentResponseRef.current += data.content;
                     setMessages((prev) => {
                         const lastMsgIndex = prev.length - 1;
-                        if (lastMsgIndex >= 0 && prev[lastMsgIndex].sender === 'jarvis') {
+                        if (lastMsgIndex >= 0 && prev[lastMsgIndex].sender === 'agent') {
                             const updatedMsg = {
                                 ...prev[lastMsgIndex],
                                 text: prev[lastMsgIndex].text + data.content
@@ -108,43 +67,30 @@ const JarvisChatbot = () => {
                         }
                         return prev;
                     });
-                    speak(currentResponseRef.current);
                 } else if (data.type === 'error' || data.error) {
-                    console.error("Assistant error:", data.error);
                     const errorMessage: Message = {
                         id: Date.now(),
-                        text: "Error processing request.",
-                        sender: "jarvis",
+                        text: "Something went wrong. Please try again.",
+                        sender: "agent",
                     };
                     setMessages((prev) => [...prev, errorMessage]);
-                    speak("Error processing request.");
                     setIsLoading(false);
                 } else if (data.message) {
                     const botMessage: Message = {
                         id: Date.now(),
                         text: data.message,
-                        sender: "jarvis",
+                        sender: "agent",
                     };
                     setMessages((prev) => [...prev, botMessage]);
-                    speak(data.message);
                     setIsLoading(false);
                 }
             };
             
-            ws.onerror = (error) => {
-                console.error("WebSocket Error:", error);
-                const errorMessage: Message = {
-                    id: Date.now(),
-                    text: "Connection interrupted. Please try again.",
-                    sender: "jarvis",
-                };
-                setMessages((prev) => [...prev, errorMessage]);
-                speak("Connection interrupted.");
+            ws.onerror = () => {
                 setIsLoading(false);
             };
 
             ws.onclose = () => {
-                console.log("Disconnected from portfolio assistant");
                 socketRef.current = null;
             };
         }
@@ -155,17 +101,7 @@ const JarvisChatbot = () => {
                 socketRef.current = null;
             }
         };
-    }, [isOpen, speak]);
-
-
-    const toggleMute = () => {
-        if (!isMuted) {
-            window.speechSynthesis.cancel();
-        }
-        setIsMuted(!isMuted);
-    };
-
-
+    }, [isOpen]);
 
     const [showTooltip, setShowTooltip] = useState(true);
     const [tooltipText, setTooltipText] = useState("");
@@ -179,9 +115,9 @@ const JarvisChatbot = () => {
             i++;
             if (i > fullTooltipText.length) {
                 clearInterval(interval);
-                setTimeout(() => setShowTooltip(false), 10000);
+                setTimeout(() => setShowTooltip(false), 8000);
             }
-        }, 50);
+        }, 40);
 
         return () => clearInterval(interval);
     }, [showTooltip]);
@@ -190,9 +126,8 @@ const JarvisChatbot = () => {
         setIsOpen(true);
         setShowTooltip(false);
         if (messages.length === 0) {
-            const greeting = "Portfolio assistant is online. Ask about experience, projects, or skills.";
-            setMessages([{ id: 0, text: greeting, sender: "jarvis" }]);
-            speak(greeting);
+            const greeting = "Hello! I'm Aniket's assistant. You can ask me about his work experience, technical skills, or recent projects. How can I help you today?";
+            setMessages([{ id: 0, text: greeting, sender: "agent" }]);
         }
     };
 
@@ -215,11 +150,10 @@ const JarvisChatbot = () => {
         } else {
             const errorMessage: Message = {
                 id: Date.now() + 1,
-                text: "Assistant is offline right now.",
-                sender: "jarvis"
+                text: "Assistant is currently offline. Please try again later.",
+                sender: "agent"
             };
             setMessages((prev) => [...prev, errorMessage]);
-            speak("Assistant is offline.");
             setIsLoading(false);
         }
     };
@@ -227,27 +161,29 @@ const JarvisChatbot = () => {
     return (
         <>
             {!isOpen && (
-                <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] flex flex-col items-end gap-2">
+                <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] flex flex-col items-end gap-3">
                     <AnimatePresence>
                         {showTooltip && (
                             <motion.div
-                                initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.9 }}
-                                className="surface-card relative mb-2 max-w-[180px] rounded-2xl px-3 py-2 md:max-w-[220px]"
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                className="surface-card relative mb-2 max-w-[220px] rounded-2xl px-4 py-3 shadow-xl border border-slate-200"
                             >
-                                <p className="typing-cursor font-mono text-xs text-slate-700 md:text-sm">{tooltipText}</p>
-                                <div className="absolute -bottom-2 right-4 h-3 w-3 rotate-45 border-b border-r border-slate-200 bg-white md:h-4 md:w-4"></div>
+                                <p className="font-sans text-xs font-medium text-slate-700">{tooltipText}</p>
+                                <div className="absolute -bottom-1.5 right-6 h-3 w-3 rotate-45 bg-white border-b border-r border-slate-200"></div>
                             </motion.div>
                         )}
                     </AnimatePresence>
                     <motion.button
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={handleOpen}
-                        className="rounded-full border border-slate-300 bg-white p-3 text-slate-700 shadow-xl shadow-slate-200/60 transition-all group hover:border-slate-900 hover:text-slate-950 md:p-4"
+                        className="h-14 w-14 md:h-16 md:w-16 flex items-center justify-center rounded-full bg-slate-950 text-white shadow-2xl transition-all hover:bg-slate-900 active:bg-black group border border-slate-800"
                     >
-                        <MessageSquareText className="h-6 w-6 transition-transform duration-700 group-hover:-translate-y-0.5 md:h-8 md:w-8" />
+                        <MessageCircle className="h-6 w-6 md:h-7 md:w-7" />
                     </motion.button>
                 </div>
             )}
@@ -258,89 +194,119 @@ const JarvisChatbot = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        className="fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-[101] flex items-center justify-center p-4"
                     >
                         <motion.div
-                        initial={{ scale: 0.9, y: 20 }}
-                        animate={{ scale: 1, y: 0 }}
-                        exit={{ scale: 0.9, y: 20 }}
-                        className="relative flex h-[600px] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white font-mono shadow-2xl"
-                    >
-                            <div className="z-20 flex items-center justify-between border-b border-slate-200 bg-slate-50 p-4">
-                                <div className="flex items-center gap-2 text-slate-700">
-                                    <Terminal className="h-5 w-5" />
-                                    <span className="text-sm font-bold tracking-[0.18em]">PORTFOLIO ASSISTANT</span>
+                            initial={{ scale: 0.95, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.95, y: 20 }}
+                            className="relative flex h-[650px] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white font-sans shadow-2xl"
+                        >
+                            {/* Header */}
+                            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 p-5 px-8">
+                                <div className="flex items-center gap-4">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white shadow-lg">
+                                        <Bot className="h-6 w-6" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-sm font-bold text-slate-900 tracking-tight">Aniket's Assistant</h2>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            <span className="text-[11px] font-medium text-slate-500">Ready to help</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <button
-                                        onClick={toggleMute}
-                                        className="text-slate-400 transition-colors hover:text-slate-900"
-                                        title={isMuted ? "Unmute" : "Mute"}
-                                    >
-                                        {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-                                    </button>
-                                    <button
-                                        onClick={() => setIsOpen(false)}
-                                        className="text-slate-400 transition-colors hover:text-slate-900"
-                                    >
-                                        <X className="h-6 w-6" />
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={() => setIsOpen(false)}
+                                    className="h-10 w-10 flex items-center justify-center rounded-full text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-900"
+                                >
+                                    <X className="h-6 w-6" />
+                                </button>
                             </div>
 
-                            <div className="z-20 flex-1 space-y-4 overflow-y-auto p-4">
+                            {/* Messages area */}
+                            <div className="flex-1 space-y-6 overflow-y-auto p-6 px-8 scrollbar-thin scrollbar-thumb-slate-200">
                                 {messages.map((msg) => (
                                     <motion.div
-                                        initial={{ opacity: 0, x: msg.sender === "user" ? 20 : -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
                                         key={msg.id}
-                                        className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                                        className={`flex gap-4 ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}
                                     >
+                                        <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${
+                                            msg.sender === "user" 
+                                            ? "border-slate-800 bg-slate-900" 
+                                            : "border-slate-200 bg-slate-50"
+                                        }`}>
+                                            {msg.sender === "user" ? <User className="h-4 w-4 text-slate-100" /> : <Terminal className="h-4 w-4 text-slate-600" />}
+                                        </div>
                                         <div
-                                            className={`max-w-[80%] p-3 rounded-lg border ${msg.sender === "user"
-                                                ? "border-slate-900 bg-slate-900 text-white"
-                                                : "border-slate-200 bg-slate-50 text-slate-700"
-                                                }`}
+                                            className={`relative max-w-[85%] rounded-2xl px-5 py-3.5 shadow-sm border ${
+                                                msg.sender === "user"
+                                                    ? "border-slate-800 bg-slate-900 text-white rounded-tr-none"
+                                                    : "border-slate-100 bg-slate-50/50 text-slate-800 rounded-tl-none"
+                                            }`}
                                         >
-                                            <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                                            <p className="text-sm leading-relaxed whitespace-pre-wrap">
                                                 {msg.text}
                                                 {msg.isStreaming && (
-                                                    <span className="ml-1 inline-block h-4 w-2 animate-pulse bg-slate-500" />
+                                                    <span className="ml-1 inline-block h-4 w-1.5 animate-pulse bg-slate-400 align-middle" />
                                                 )}
                                             </p>
                                         </div>
                                     </motion.div>
                                 ))}
                                 {isLoading && (
-                                    <div className="flex justify-start">
-                                        <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3 text-slate-700">
-                                            <span className="h-2 w-2 animate-pulse rounded-full bg-slate-500"></span>
-                                            <span className="h-2 w-2 animate-pulse rounded-full bg-slate-500 delay-100"></span>
-                                            <span className="h-2 w-2 animate-pulse rounded-full bg-slate-500 delay-200"></span>
+                                    <div className="flex flex-row gap-4">
+                                        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50">
+                                            <Terminal className="h-4 w-4 text-slate-600" />
+                                        </div>
+                                        <div className="flex items-center gap-1.5 rounded-2xl border border-slate-100 bg-slate-50/50 px-5 py-4">
+                                            <span className="text-xs font-medium text-slate-400 mr-1 italic">Agent is typing</span>
+                                            <motion.span 
+                                                animate={{ opacity: [0, 1, 0] }} 
+                                                transition={{ repeat: Infinity, duration: 1.5, times: [0, 0.5, 1] }} 
+                                                className="h-1 w-1 rounded-full bg-slate-400"
+                                            />
+                                            <motion.span 
+                                                animate={{ opacity: [0, 1, 0] }} 
+                                                transition={{ repeat: Infinity, duration: 1.5, times: [0, 0.5, 1], delay: 0.2 }} 
+                                                className="h-1 w-1 rounded-full bg-slate-400"
+                                            />
+                                            <motion.span 
+                                                animate={{ opacity: [0, 1, 0] }} 
+                                                transition={{ repeat: Infinity, duration: 1.5, times: [0, 0.5, 1], delay: 0.4 }} 
+                                                className="h-1 w-1 rounded-full bg-slate-400"
+                                            />
                                         </div>
                                     </div>
                                 )}
                                 <div ref={messagesEndRef} />
                             </div>
 
-                            <form onSubmit={handleSubmit} className="z-20 border-t border-slate-200 bg-slate-50 p-4">
-                                <div className="flex gap-2">
+                            {/* Footer / Input */}
+                            <div className="border-t border-slate-100 bg-white p-6 px-8">
+                                <form onSubmit={handleSubmit} className="relative">
                                     <input
                                         type="text"
                                         value={query}
                                         onChange={(e) => setQuery(e.target.value)}
-                                        placeholder="Ask about projects, experience, or skills..."
-                                        className="flex-1 rounded-full border border-slate-200 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 transition-all focus:border-slate-900 focus:outline-none"
+                                        placeholder="Ask a question..."
+                                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-6 py-4 pl-14 text-sm text-slate-900 placeholder-slate-400 transition-all focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-900/5"
                                     />
+                                    <MessageCircle className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                                     <button
                                         type="submit"
-                                        disabled={isLoading}
-                                        className="rounded-full bg-slate-900 px-4 text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                        disabled={isLoading || !query.trim()}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl bg-slate-950 px-4 py-2.5 text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                                     >
-                                        <Send className="h-5 w-5" />
+                                        <Send className="h-4 w-4" />
                                     </button>
-                                </div>
-                            </form>
+                                </form>
+                                <p className="mt-4 text-center text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400">
+                                    Powered by Aniket's Portfolio Agent
+                                </p>
+                            </div>
                         </motion.div>
                     </motion.div>
                 )}
