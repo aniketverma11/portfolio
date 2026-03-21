@@ -56,7 +56,7 @@ export default function Contact({ data }: { data: PersonalData }) {
                                 </a>
 
                                 {personalData.contact.resumeUrl && (
-                                    <a href={personalData.contact.resumeUrl} download className="surface-card group flex items-center justify-between rounded-2xl p-6 transition-all">
+                                    <a href={personalData.contact.resumeUrl} download target="_blank" rel="noreferrer" className="surface-card group flex items-center justify-between rounded-2xl p-6 transition-all">
                                         <span className="flex items-center gap-4">
                                             <FileText className="h-6 w-6 text-slate-500" />
                                             <span className="font-mono text-sm font-semibold uppercase tracking-[0.18em] text-slate-700">Resume</span>
