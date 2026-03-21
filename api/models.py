@@ -42,6 +42,7 @@ class Project(models.Model):
     description = models.TextField()
     tech = models.JSONField(default=list)
     link = models.CharField(max_length=500, blank=True)
+    image = models.ImageField(upload_to='projects/', blank=True, null=True)
 
     def __str__(self):
         return self.title

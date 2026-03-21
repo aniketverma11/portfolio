@@ -1,8 +1,9 @@
 
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Calendar, Clock, Eye, Tag, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { BlogPost } from '@/lib/types';
-import { Calendar, Clock, Eye, Tag } from 'lucide-react';
 
 interface BlogProps {
     data: BlogPost[];
@@ -30,14 +31,31 @@ export default function Blog({ data }: BlogProps) {
     return (
         <section id="blog" className="relative px-4 py-20">
             <div className="relative z-10 mx-auto max-w-7xl">
-                <div className="text-center mb-16">
-                    <p className="section-kicker mb-3">Writing</p>
-                    <h2 className="section-title mb-6 text-5xl font-semibold text-slate-950 md:text-6xl">
-                        Blog & Insights
-                    </h2>
-                    <p className="mx-auto max-w-3xl text-xl text-slate-600">
-                        Sharing knowledge, experiences, and insights from the world of technology
-                    </p>
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="max-w-2xl"
+                    >
+                        <p className="section-kicker mb-3">Writing</p>
+                        <h2 className="section-title text-4xl font-semibold text-slate-950 md:text-5xl leading-[1.1]">
+                            Blog & Insights from the technology frontier
+                        </h2>
+                    </motion.div>
+                    
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <Link 
+                            to="/blog" 
+                            className="group inline-flex items-center gap-2 rounded-full border border-slate-900 px-8 py-4 text-sm font-bold uppercase tracking-[0.18em] text-slate-950 transition-all hover:bg-slate-900 hover:text-white"
+                        >
+                            View All <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </Link>
+                    </motion.div>
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-3 mb-12">
@@ -55,18 +73,18 @@ export default function Blog({ data }: BlogProps) {
                     ))}
                 </div>
 
-                {/* Blog Posts Grid */}
+                {/* Blog Posts Grid - Mobile Horizontal Scroll / Desktop Grid */}
                 {filteredPosts.length === 0 ? (
                     <div className="text-center py-20">
                         <p className="text-2xl text-slate-500">No blog posts found</p>
                     </div>
                 ) : (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 overflow-x-auto pb-8 md:pb-0 snap-x hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
                         {filteredPosts.map((post, index) => (
                             <Link
                                 key={post.id}
                                 to={`/blog/${post.slug}`}
-                                className="surface-card block overflow-hidden rounded-[1.75rem] transition-all duration-500 hover:-translate-y-2"
+                                className="flex-none w-[85vw] md:w-auto snap-center surface-card block overflow-hidden rounded-[1.75rem] transition-all duration-500 hover:-translate-y-2"
                                 style={{
                                     animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`
                                 }}
@@ -150,18 +168,6 @@ export default function Blog({ data }: BlogProps) {
                 )}
             </div>
 
-            <style jsx>{`
-                @keyframes fadeInUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(30px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-            `}</style>
         </section>
     );
 }

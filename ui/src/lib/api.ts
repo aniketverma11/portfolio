@@ -40,7 +40,19 @@ export async function getExperience(): Promise<Experience[]> {
 export async function getProjects(): Promise<Project[]> {
     const res = await fetch(`${API_BASE_URL}/projects/`);
     if (!res.ok) throw new Error('Failed to fetch projects');
-    return res.json();
+    const data = await res.json();
+    
+    // Rewrite incorrect media URLs for projects
+    if (API_BASE_URL?.includes('aniketverma.xyz')) {
+        return data.map((project: Project) => {
+            if (project.image_url) {
+                project.image_url = (project.image_url as string).replace('http://localhost:8000', 'https://aniketverma.xyz');
+            }
+            return project;
+        });
+    }
+    
+    return data;
 }
 
 export async function getAchievements(): Promise<Achievement[]> {

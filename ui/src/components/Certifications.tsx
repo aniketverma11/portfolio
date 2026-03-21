@@ -48,7 +48,8 @@ export default function Certifications({ data }: { data: Certification[] }) {
                     </motion.div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {/* Mobile Horizontal Scroll / Desktop Grid */}
+                <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 overflow-x-auto pb-8 md:pb-0 snap-x hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
                     {displayCertifications.map((cert, index) => (
                         <motion.div
                             key={cert.id}
@@ -56,7 +57,7 @@ export default function Certifications({ data }: { data: Certification[] }) {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="surface-card group relative p-6 rounded-[2.5rem] border border-slate-200 bg-white transition-all hover:border-slate-300 hover:shadow-xl hover:-translate-y-2"
+                            className="flex-none w-[85vw] md:w-auto snap-center surface-card group relative p-6 rounded-[2.5rem] border border-slate-200 bg-white transition-all hover:border-slate-300 hover:shadow-xl hover:-translate-y-2"
                         >
                             <div className="mb-6 aspect-video overflow-hidden rounded-[1.5rem] border border-slate-100 bg-slate-50 relative">
                                 {cert.image_url ? (

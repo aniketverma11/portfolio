@@ -39,6 +39,8 @@ export interface Project {
     description: string;
     tech: string[];
     link: string;
+    image?: string | null;
+    image_url?: string | null;
 }
 
 export interface Achievement {
