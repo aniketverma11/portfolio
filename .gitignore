@@ -5,9 +5,9 @@ node_modules/
 jspm_packages/
 bower_components/
 
-# Build outputs
-dist/
-build/
+# # Build outputs
+# dist/
+# build/
 
 target/
 bin/
