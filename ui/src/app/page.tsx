@@ -11,19 +11,26 @@ import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { getPersonalData, getSkills, getExperience, getProjects, getAchievements, getBlogPosts } from "@/lib/api";
+import {
+  personalData as fallbackPersonalData,
+  skills as fallbackSkills,
+  experience as fallbackExperience,
+  projects as fallbackProjects,
+  achievements as fallbackAchievements,
+} from "@/lib/data";
 import type { PersonalData, Skill, Experience as ExperienceType, Project, Achievement, BlogPost } from "@/lib/types";
 
 export default function Home() {
-  const [personalData, setPersonalData] = useState<PersonalData | null>(null);
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [experience, setExperience] = useState<ExperienceType[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  // Initialize with fallback data so the page renders instantly
+  const [personalData, setPersonalData] = useState<PersonalData>(fallbackPersonalData as PersonalData);
+  const [skills, setSkills] = useState<Skill[]>(fallbackSkills as Skill[]);
+  const [experience, setExperience] = useState<ExperienceType[]>(fallbackExperience as ExperienceType[]);
+  const [projects, setProjects] = useState<Project[]>(fallbackProjects as Project[]);
+  const [achievements, setAchievements] = useState<Achievement[]>(fallbackAchievements as Achievement[]);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Fetch real data in the background and update silently
     async function fetchData() {
       try {
         const [personalDataRes, skillsRes, experienceRes, projectsRes, achievementsRes, blogPostsRes] = await Promise.all([
@@ -43,36 +50,12 @@ export default function Home() {
         setBlogPosts(blogPostsRes);
       } catch (err) {
         console.error('Error fetching data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load data');
-      } finally {
-        setLoading(false);
+        // Fallback data is already displayed, so no need to show an error
       }
     }
 
     fetchData();
   }, []);
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-slate-900 border-r-transparent mb-4"></div>
-          <p className="text-lg">Loading portfolio...</p>
-        </div>
-      </main>
-    );
-  }
-
-  if (error || !personalData) {
-    return (
-      <main className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-500 mb-4">Error Loading Portfolio</h1>
-          <p className="text-slate-500">{error || 'Failed to load data'}</p>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="page-shell min-h-screen bg-slate-50 text-slate-900">
