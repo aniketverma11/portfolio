@@ -42,9 +42,18 @@ class SkillCategorySerializer(serializers.ModelSerializer):
         fields = ['category', 'items']
 
 class ExperienceSerializer(serializers.ModelSerializer):
+    company_logo_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Experience
-        fields = '__all__'
+        fields = ['id', 'company', 'role', 'period', 'color', 'description', 'achievements', 'company_logo', 'company_logo_url']
+
+    def get_company_logo_url(self, obj):
+        if obj.company_logo:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.company_logo.url)
+        return None
 
 class ProjectSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()

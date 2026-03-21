@@ -40,31 +40,65 @@ export default function Experience({ data }: { data: ExperienceType[] }) {
                         >
                             <span className="absolute -left-[11px] top-8 h-5 w-5 rounded-full border-4 border-slate-50 bg-slate-900 transition-all group-hover:scale-110" />
 
-                            <div className="surface-card rounded-[1.75rem] p-7">
-                                <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-baseline">
-                                    <div>
-                                        <h3 className="section-title text-2xl font-semibold text-slate-950">
-                                            {job.role}
-                                        </h3>
-                                        <span className="mt-1 block text-sm font-medium text-slate-500">{job.company}</span>
+                            <div className="surface-card relative overflow-hidden rounded-[2.5rem] p-8 md:p-10 border border-slate-200 bg-white transition-all hover:shadow-2xl hover:-translate-y-1">
+                                {/* Company Background Image Overlay */}
+                                {job.company_logo_url && (
+                                    <div className="absolute top-0 right-0 h-full w-1/3 opacity-[0.1] transition-opacity group-hover:opacity-[0.2]">
+                                        <img 
+                                            src={job.company_logo_url} 
+                                            alt="" 
+                                            className="h-full w-full object-contain object-right grayscale pointer-events-none"
+                                        />
                                     </div>
-                                    <span className="md:ml-auto rounded-full border border-slate-200 bg-slate-50 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
-                                    {job.period}
-                                    </span>
+                                )}
+
+                                <div className="relative z-10">
+                                    <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-center">
+                                        {job.company_logo_url && (
+                                            <div className="h-16 w-16 shrink-0 rounded-2xl border border-slate-100 bg-white p-2 shadow-sm flex items-center justify-center">
+                                                <img 
+                                                    src={job.company_logo_url} 
+                                                    alt={job.company}
+                                                    className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
+                                                />
+                                            </div>
+                                        )}
+                                        
+                                        <div className="flex-1">
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                <div>
+                                                    <h3 className="section-title text-2xl font-bold text-slate-950 md:text-3xl leading-tight">
+                                                        {job.role}
+                                                    </h3>
+                                                    <span className="mt-1 block text-lg font-medium text-slate-500">{job.company}</span>
+                                                </div>
+                                                <span className="rounded-full border border-slate-200 bg-white px-5 py-2 font-mono text-xs font-bold uppercase tracking-[0.16em] text-slate-600 shadow-sm">
+                                                    {job.period}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid lg:grid-cols-12 gap-10">
+                                        <div className="lg:col-span-12">
+                                            <p className="mb-8 max-w-4xl text-lg leading-8 text-slate-600">
+                                                {job.description}
+                                            </p>
+
+                                            <div className="space-y-4">
+                                                <h4 className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Key Deliverables</h4>
+                                                <ul className="grid md:grid-cols-2 gap-x-8 gap-y-4">
+                                                    {job.achievements.map((item, i) => (
+                                                        <li key={i} className="flex items-start gap-4 text-sm leading-7 text-slate-700">
+                                                            <span className="mt-2.5 h-2 w-2 shrink-0 rounded-full border-2 border-slate-900" />
+                                                            {item}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <p className="mb-5 max-w-3xl leading-7 text-slate-600">
-                                    {job.description}
-                                </p>
-
-                                <ul className="space-y-3">
-                                    {job.achievements.map((item, i) => (
-                                        <li key={i} className="flex items-start gap-3 text-sm leading-6 text-slate-700">
-                                            <span className="mt-2 h-1.5 w-1.5 rounded-full bg-slate-900" />
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
                             </div>
                         </motion.div>
                     ))}

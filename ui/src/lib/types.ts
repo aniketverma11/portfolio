@@ -30,6 +30,8 @@ export interface Experience {
     color: string;
     description: string;
     achievements: string[];
+    company_logo?: string | null;
+    company_logo_url?: string | null;
 }
 
 export interface Project {

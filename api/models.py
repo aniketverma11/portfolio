@@ -32,6 +32,7 @@ class Experience(models.Model):
     color = models.CharField(max_length=50)
     description = models.TextField()
     achievements = models.JSONField(default=list)
+    company_logo = models.ImageField(upload_to='experience/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.role} at {self.company}"

@@ -34,7 +34,19 @@ export async function getSkills(): Promise<Skill[]> {
 export async function getExperience(): Promise<Experience[]> {
     const res = await fetch(`${API_BASE_URL}/experience/`);
     if (!res.ok) throw new Error('Failed to fetch experience');
-    return res.json();
+    const data = await res.json();
+    
+    // Rewrite incorrect media URLs for experience logos
+    if (API_BASE_URL?.includes('aniketverma.xyz')) {
+        return data.map((exp: Experience) => {
+            if (exp.company_logo_url) {
+                exp.company_logo_url = (exp.company_logo_url as string).replace('http://localhost:8000', 'https://aniketverma.xyz');
+            }
+            return exp;
+        });
+    }
+    
+    return data;
 }
 
 export async function getProjects(): Promise<Project[]> {
