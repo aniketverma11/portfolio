@@ -23,17 +23,27 @@ export default function Navbar() {
             setScrolled(window.scrollY > 50);
         };
         window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+        
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            document.body.style.overflow = "unset";
+        };
+    }, [isOpen]);
 
     return (
         <nav
-            className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-                ? "border-b border-slate-200/80 bg-slate-50/90 py-3 backdrop-blur-xl"
+            className={`fixed top-0 w-full z-[1000] transition-all duration-300 ${scrolled
+                ? "border-b border-slate-200 bg-white/95 py-3 backdrop-blur-xl"
                 : "bg-transparent py-5"
                 }`}
         >
-            <div className="container mx-auto px-4 flex justify-between items-center">
+            <div className="container mx-auto px-4 flex justify-between items-center relative z-10">
                 <Link to="/" className="flex items-center gap-2 group">
                     <span className="font-mono text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
                         &lt;/&gt;
@@ -62,12 +72,14 @@ export default function Navbar() {
                     </a>
                 </div>
 
-                <button
-                    className="md:hidden text-slate-900 transition-colors hover:text-slate-600"
-                    onClick={() => setIsOpen(true)}
-                >
-                    <Menu className="w-8 h-8" />
-                </button>
+                <div className="md:hidden flex items-center">
+                    <button
+                        className="text-slate-900 transition-colors hover:text-slate-600"
+                        onClick={() => setIsOpen(true)}
+                    >
+                        <Menu className="w-8 h-8" />
+                    </button>
+                </div>
             </div>
 
             {/* Mobile Menu */}
@@ -76,26 +88,35 @@ export default function Navbar() {
                     <motion.div
                         initial={{ opacity: 0, x: "100%" }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: "100%" }}
+                        exit={{ opacity: 1, x: "100%" }}
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-slate-50/95 backdrop-blur-xl"
+                        className="fixed inset-0 z-[2000] h-screen w-screen flex flex-col items-center justify-center bg-white"
                     >
-                        <button
-                            onClick={() => setIsOpen(false)}
-                            className="absolute top-6 right-6 text-slate-500 hover:text-slate-950"
-                        >
-                            <X className="w-8 h-8" />
-                        </button>
-                        {navLinks.map((link) => (
-                            <a
-                                key={link.name}
-                                href={link.href}
+                        <div className="absolute top-0 left-0 w-full p-5 px-4 flex justify-between items-center border-b border-slate-100">
+                            <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-2">
+                                <span className="font-mono text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">&lt;/&gt;</span>
+                                <span className="font-mono text-lg font-semibold text-slate-950">aniket.verma</span>
+                            </Link>
+                            <button
                                 onClick={() => setIsOpen(false)}
-                                className="font-mono text-2xl font-semibold text-slate-700 transition-colors hover:text-slate-950"
+                                className="h-12 w-12 flex items-center justify-center rounded-full bg-slate-100 text-slate-950 hover:bg-slate-200 transition-all"
                             >
-                                {link.name}
-                            </a>
-                        ))}
+                                <X className="w-7 h-7" />
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col items-center justify-center gap-10">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.name}
+                                    to={link.href}
+                                    onClick={() => setIsOpen(false)}
+                                    className="font-mono text-3xl font-extrabold tracking-tight text-slate-950 transition-colors hover:text-slate-500"
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
