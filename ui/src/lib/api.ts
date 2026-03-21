@@ -17,6 +17,12 @@ export async function getPersonalData(): Promise<PersonalData> {
     const data = await res.json();
     // Ensure nested fields are present even if API returns nulls/defaults
     // The serializer I wrote ensures 'about' and 'contact' keys exist.
+    
+    // Fix incorrect media URLs returned by the backend due to proxy config
+    if (data?.contact?.resumeUrl && API_BASE_URL?.includes('aniketverma.xyz')) {
+        data.contact.resumeUrl = data.contact.resumeUrl.replace('http://localhost:8000', 'https://aniketverma.xyz');
+    }
+    
     return data;
 }
 
@@ -55,7 +61,19 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
             console.error(`Failed to fetch blog posts: ${res.status}`);
             return [];
         }
-        return res.json();
+        const data = await res.json();
+        
+        // Rewrite incorrect media URLs for blog featured images
+        if (API_BASE_URL?.includes('aniketverma.xyz')) {
+            return data.map((post: BlogPost) => {
+                if (post.featured_image_url) {
+                    post.featured_image_url = post.featured_image_url.replace('http://localhost:8000', 'https://aniketverma.xyz');
+                }
+                return post;
+            });
+        }
+        
+        return data;
     } catch (error) {
         console.error('Error fetching blog posts:', error);
         return [];
@@ -76,7 +94,14 @@ export async function getBlogPost(slug: string): Promise<BlogPost> {
         throw new Error(`Failed to fetch blog post: ${res.statusText}`);
     }
 
-    return res.json();
+    const data = await res.json();
+    
+    // Rewrite incorrect media URL for blog post featured image
+    if (data.featured_image_url && API_BASE_URL?.includes('aniketverma.xyz')) {
+        data.featured_image_url = data.featured_image_url.replace('http://localhost:8000', 'https://aniketverma.xyz');
+    }
+    
+    return data;
 }
 
 export async function getBlogCategories(): Promise<string[]> {
