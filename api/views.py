@@ -136,7 +136,7 @@ class ChatBotView(APIView):
                     "name": c.name, "issued_by": c.issued_by, "date": str(c.issued_date)
                 } for c in certs],
                 "blog_posts": [{
-                    "title": b.title, "excerpt": b.excerpt, "category": b.category
+                    "title": b.title, "category": b.category
                 } for b in blogs]
             }
 

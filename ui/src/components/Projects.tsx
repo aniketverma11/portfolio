@@ -109,10 +109,10 @@ export default function Projects({ data }: { data: Project[] }) {
             {/* Modal / Expanded View */}
             <AnimatePresence>
                 {selectedProject && (
-                    <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-md">
+                    <div className="fixed inset-0 z-[3000] flex justify-center bg-slate-950/40 p-4 md:p-8 backdrop-blur-md overflow-y-auto">
                         <motion.div
                             layoutId={`project-home-${projects.indexOf(selectedProject)}`}
-                            className="relative w-full max-w-3xl overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl"
+                            className="relative w-full max-w-3xl my-auto rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl overflow-hidden"
                         >
                             <button
                                 onClick={(e) => { e.stopPropagation(); setSelectedProject(null); }}
