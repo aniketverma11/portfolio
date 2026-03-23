@@ -95,7 +95,7 @@ export default function Skills({ data }: { data: Skill[] }) {
                     </motion.div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-x-auto pb-8 md:pb-0 snap-x hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
                     {skills.map((skill, index) => (
                         <motion.div
                             key={skill.category}
@@ -103,7 +103,7 @@ export default function Skills({ data }: { data: Skill[] }) {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className="surface-card group relative overflow-hidden rounded-[2.5rem] p-8 transition-all hover:shadow-2xl hover:-translate-y-2 border border-slate-200 bg-white"
+                            className="flex-none w-[85vw] md:w-auto snap-center surface-card group relative overflow-hidden rounded-[2.5rem] p-8 transition-all hover:shadow-2xl hover:-translate-y-2 border border-slate-200 bg-white"
                         >
                             {/* Card Background Branding */}
                             <div className="absolute -bottom-6 -right-6 h-32 w-32 opacity-[0.03] transition-opacity group-hover:opacity-[0.08] pointer-events-none select-none">

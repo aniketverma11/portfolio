@@ -236,3 +236,29 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Hide Google Translate Banner and fix body shift */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure navbar stays on top */
+nav {
+  z-index: 9999 !important;
+}
