@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const navLinks = [
     { name: "Home", href: "/#hero" },
@@ -18,6 +18,8 @@ const navLinks = [
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -36,6 +38,37 @@ export default function Navbar() {
             document.body.style.overflow = "unset";
         };
     }, [isOpen]);
+
+    // Handle hash scrolling when navigating from other pages or same page
+    useEffect(() => {
+        if (location.hash) {
+            const id = location.hash.replace("#", "");
+            setTimeout(() => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                }
+            }, 100);
+        }
+    }, [location]);
+
+    const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        if (href.startsWith("/#")) {
+            e.preventDefault();
+            const id = href.replace("/#", "");
+            
+            if (location.pathname === "/") {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: "smooth" });
+                    window.history.pushState(null, "", href);
+                }
+            } else {
+                navigate(href);
+            }
+        }
+        setIsOpen(false);
+    };
 
     return (
         <nav
@@ -56,17 +89,19 @@ export default function Navbar() {
 
                 <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
-                        <Link
+                        <a
                             key={link.name}
-                            to={link.href}
+                            href={link.href}
+                            onClick={(e) => handleNavClick(e, link.href)}
                             className="text-sm font-medium text-slate-600 hover:text-slate-950 transition-colors relative group"
                         >
                             {link.name}
                             <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-slate-900 transition-all duration-300 group-hover:w-full" />
-                        </Link>
+                        </a>
                     ))}
                     <a
                         href="#contact"
+                        onClick={(e) => handleNavClick(e, "/#contact")}
                         className="rounded-full border border-slate-900 px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-slate-950 transition-colors hover:bg-slate-900 hover:text-white"
                     >
                         Let&apos;s Talk
@@ -108,14 +143,14 @@ export default function Navbar() {
 
                         <div className="flex flex-col items-center justify-center gap-10">
                             {navLinks.map((link) => (
-                                <Link
+                                <a
                                     key={link.name}
-                                    to={link.href}
-                                    onClick={() => setIsOpen(false)}
+                                    href={link.href}
+                                    onClick={(e) => handleNavClick(e, link.href)}
                                     className="font-mono text-3xl font-extrabold tracking-tight text-slate-950 transition-colors hover:text-slate-500"
                                 >
                                     {link.name}
-                                </Link>
+                                </a>
                             ))}
                         </div>
                     </motion.div>
