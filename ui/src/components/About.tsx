@@ -1,34 +1,36 @@
-"use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck } from "lucide-react";
+import { CircleCheckBig } from "lucide-react";
 import { PersonalData } from "@/lib/types";
 
 export default function About({ data }: { data: PersonalData }) {
     const personalData = data;
     return (
         <section id="about" className="py-24 relative">
-            <div className="container mx-auto px-4 flex flex-col md:flex-row gap-12 items-center">
+            <div className="container mx-auto flex flex-col items-center gap-12 px-4 md:flex-row">
                 <div className="flex-1">
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                     >
-                        <div className="flex items-center gap-4 mb-6">
-                            <div className="p-4 bg-blue-900/20 rounded-full border border-blue-500/50">
-                                <ShieldCheck className="w-12 h-12 text-blue-500" />
+                        <div className="mb-6 flex items-center gap-4">
+                            <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                                <CircleCheckBig className="h-10 w-10 text-slate-700" />
                             </div>
-                            <h2 className="text-4xl md:text-5xl font-black font-orbitron text-white">
-                                THE <span className="text-blue-500">MISSION</span>
-                            </h2>
+                            <div>
+                                <p className="section-kicker mb-2">About</p>
+                                <h2 className="section-title text-4xl font-semibold text-slate-950 md:text-5xl">
+                                    How I approach engineering work
+                                </h2>
+                            </div>
                         </div>
 
-                        <h3 className="text-2xl font-bold text-slate-200 mb-6 font-orbitron">
+                        <h3 className="section-title mb-6 text-2xl font-semibold text-slate-900">
                             {personalData.about.title}
                         </h3>
 
-                        <div className="space-y-4 text-slate-400 text-lg leading-relaxed mb-8">
+                        <div className="mb-8 space-y-4 text-lg leading-8 text-slate-600">
                             {personalData.about.description.map((para, i) => (
                                 <p key={i}>{para}</p>
                             ))}
@@ -36,23 +38,38 @@ export default function About({ data }: { data: PersonalData }) {
 
                         <div className="grid grid-cols-2 gap-4">
                             {personalData.about.values.map((value, i) => (
-                                <div key={i} className="flex items-center gap-2 p-3 bg-slate-900 border border-slate-800 rounded-lg">
-                                    <span className="w-2 h-2 rounded-full bg-blue-500" />
-                                    <span className="font-bold text-slate-300 uppercase tracking-wider text-sm">{value}</span>
+                                <div key={i} className="rounded-2xl border border-slate-200 bg-white p-4">
+                                    <span className="font-mono text-sm font-semibold uppercase tracking-[0.16em] text-slate-700">{value}</span>
                                 </div>
                             ))}
                         </div>
                     </motion.div>
                 </div>
 
-                {/* Cinematic Visual - Shield/Circle concept */}
                 <div className="flex-1 flex justify-center relative">
-                    <div className="relative w-80 h-80 md:w-96 md:h-96">
-                        <div className="absolute inset-0 border-4 border-blue-900/30 rounded-full animate-[spin_10s_linear_infinite]" />
-                        <div className="absolute inset-4 border-2 border-dashed border-blue-500/20 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-64 h-64 rounded-full bg-gradient-to-br from-blue-600 to-blue-900 opacity-20 blur-xl" />
-                            <ShieldCheck className="w-32 h-32 text-blue-500/50 absolute" />
+                    <div className="surface-card w-full max-w-md rounded-[2rem] p-8">
+                        <div className="mb-6 flex items-center justify-between border-b border-slate-200 pb-4">
+                            <span className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                                Working Principles
+                            </span>
+                            <span className="font-mono text-xs text-slate-400">01</span>
+                        </div>
+                        <div className="space-y-5">
+                            {personalData.about.values.map((value, i) => (
+                                <div key={i} className="flex items-start gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                    <span className="mt-1 font-mono text-sm font-semibold text-slate-400">
+                                        0{i + 1}
+                                    </span>
+                                    <div>
+                                        <p className="font-mono text-sm font-semibold uppercase tracking-[0.16em] text-slate-900">
+                                            {value}
+                                        </p>
+                                        <p className="mt-2 text-sm leading-7 text-slate-600">
+                                            Built into how I scope, design, and deliver software for teams and end users.
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

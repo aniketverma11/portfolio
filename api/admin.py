@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils import timezone
-from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, AdminOTP, ServiceQuery, ValentineResponse
+from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, AdminOTP, ServiceQuery, ValentineResponse, Certification
 
 @admin.register(ServiceQuery)
 class ServiceQueryAdmin(admin.ModelAdmin):
@@ -82,3 +82,8 @@ class ValentineResponseAdmin(admin.ModelAdmin):
     list_display = ('response', 'ip_address', 'location', 'device_model', 'created_at')
     list_filter = ('response', 'created_at')
     readonly_fields = ('created_at',)
+
+@admin.register(Certification)
+class CertificationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'issued_by', 'certification_id')
+    search_fields = ('name', 'issued_by', 'certification_id')

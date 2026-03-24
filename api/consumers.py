@@ -7,7 +7,7 @@ from google.genai import types
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from dotenv import load_dotenv
-from .models import PersonalData, SkillCategory, Experience, Project, Achievement
+from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, Certification
 
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -152,6 +152,25 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 "description": ach.description
             })
 
+        certs = []
+        for cert in Certification.objects.all():
+            certs.append({
+                "name": cert.name,
+                "id": cert.certification_id,
+                "issued_by": cert.issued_by,
+                "date": str(cert.issued_date) if cert.issued_date else "N/A"
+            })
+
+        blogs = []
+        for post in BlogPost.objects.filter(status='published'):
+            blogs.append({
+                "title": post.title,
+                "excerpt": post.excerpt,
+                "category": post.category,
+                "tags": post.tags,
+                "date": post.published_at.strftime('%Y-%m-%d') if post.published_at else "N/A"
+            })
+
         pd_dict = {
             "name": personal_data.name if personal_data else "Aniket Verma",
             "role": personal_data.role if personal_data else "N/A",
@@ -169,6 +188,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         context_str += f"Skills: {json.dumps(skills)}\n"
         context_str += f"Experience: {json.dumps(experiences)}\n"
         context_str += f"Projects: {json.dumps(projects)}\n"
-        context_str += f"Achievements: {json.dumps(achievements)}"
+        context_str += f"Achievements: {json.dumps(achievements)}\n"
+        context_str += f"Certifications: {json.dumps(certs)}\n"
+        context_str += f"Blog Posts: {json.dumps(blogs)}"
         
         return context_str

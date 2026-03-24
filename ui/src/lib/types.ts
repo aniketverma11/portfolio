@@ -30,6 +30,8 @@ export interface Experience {
     color: string;
     description: string;
     achievements: string[];
+    company_logo?: string | null;
+    company_logo_url?: string | null;
 }
 
 export interface Project {
@@ -39,6 +41,8 @@ export interface Project {
     description: string;
     tech: string[];
     link: string;
+    image?: string | null;
+    image_url?: string | null;
 }
 
 export interface Achievement {
@@ -65,5 +69,16 @@ export interface BlogPost {
     updated_at?: string;
     meta_description?: string;
     meta_keywords?: string;
+}
+
+export interface Certification {
+    id: number;
+    name: string;
+    certification_id: string | null;
+    url: string | null;
+    image: string | null;
+    image_url: string | null;
+    issued_by: string | null;
+    issued_date: string | null;
 }
 

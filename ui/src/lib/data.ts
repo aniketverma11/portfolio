@@ -143,3 +143,33 @@ export const achievements = [
         description: "Delivered enterprise-scale applications from scratch."
     }
 ];
+
+export const certifications = [
+    {
+        id: 1,
+        name: "Generative AI Systems Architect",
+        certification_id: "AI-2024-X102",
+        url: "#",
+        image_url: null,
+        issued_by: "DeepLearning.AI",
+        issued_date: "2024-01-15"
+    },
+    {
+        id: 2,
+        name: "Azure Solutions Architect Expert",
+        certification_id: "MSFT-88921-AZ",
+        url: "#",
+        image_url: null,
+        issued_by: "Microsoft",
+        issued_date: "2023-11-20"
+    },
+    {
+        id: 3,
+        name: "AWS Certified Developer – Associate",
+        certification_id: "AWS-DEV-99212",
+        url: "#",
+        image_url: null,
+        issued_by: "Amazon Web Services",
+        issued_date: "2023-06-12"
+    }
+];

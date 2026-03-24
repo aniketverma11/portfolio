@@ -1,7 +1,6 @@
-"use client";
 import React from "react";
 import { motion } from "framer-motion";
-import { Hammer } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
 import { Experience as ExperienceType } from "@/lib/types";
 
 export default function Experience({ data }: { data: ExperienceType[] }) {
@@ -13,20 +12,23 @@ export default function Experience({ data }: { data: ExperienceType[] }) {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="mb-16 flex items-center gap-4"
+                    className="mb-16 flex items-start gap-4"
                 >
-                    <Hammer className="w-10 h-10 text-red-500" />
+                    <div className="rounded-2xl border border-slate-200 bg-white p-3">
+                        <BriefcaseBusiness className="h-8 w-8 text-slate-700" />
+                    </div>
                     <div>
-                        <h2 className="text-4xl md:text-5xl font-black font-orbitron text-white">
-                            HEROIC JOURNEY
+                        <p className="section-kicker mb-2">Experience</p>
+                        <h2 className="section-title text-4xl font-semibold text-slate-950 md:text-5xl">
+                            Work focused on business impact and technical depth
                         </h2>
-                        <p className="text-red-500 uppercase tracking-widest text-sm font-bold">
-                            Battle History & Conquests
+                        <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+                            Roles across enterprise applications, AI systems, backend engineering, and platform delivery.
                         </p>
                     </div>
                 </motion.div>
 
-                <div className="relative border-l-2 border-slate-800 ml-3 md:ml-6 space-y-12">
+                <div className="relative ml-3 space-y-10 border-l-2 border-slate-200 md:ml-6">
                     {experience.map((job, index) => (
                         <motion.div
                             key={index}
@@ -34,33 +36,72 @@ export default function Experience({ data }: { data: ExperienceType[] }) {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ delay: index * 0.1 }}
-                            className="relative pl-8 md:pl-12 group"
+                            className="group relative pl-8 md:pl-12"
                         >
-                            {/* Timeline Node */}
-                            <span className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-900 border-2 border-slate-600 group-hover:border-white group-hover:scale-125 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)] group-hover:shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+                            <span className="absolute -left-[11px] top-8 h-5 w-5 rounded-full border-4 border-slate-50 bg-slate-900 transition-all group-hover:scale-110" />
 
-                            <div className="flex flex-col md:flex-row gap-2 md:items-baseline mb-2">
-                                <h3 className="text-2xl font-bold font-orbitron text-white group-hover:text-cyan-400 transition-colors">
-                                    {job.role}
-                                </h3>
-                                <span className="text-slate-500 font-mono text-sm">@ {job.company}</span>
-                                <span className="md:ml-auto text-cyan-500 text-sm font-bold uppercase tracking-wider bg-cyan-950/30 px-3 py-1 rounded">
-                                    {job.period}
-                                </span>
+                            <div className="surface-card relative overflow-hidden rounded-[2.5rem] p-8 md:p-10 border border-slate-200 bg-white transition-all hover:shadow-2xl hover:-translate-y-1">
+                                {/* Company Background Image Overlay */}
+                                {job.company_logo_url && (
+                                    <div className="absolute bottom-0 right-0 h-48 w-48 opacity-[0.05] transition-opacity group-hover:opacity-[0.1] pointer-events-none -mr-8 -mb-8 select-none">
+                                        <div className="h-full w-full rounded-tl-[100px] overflow-hidden bg-slate-50/50 p-10">
+                                            <img 
+                                                src={job.company_logo_url} 
+                                                alt="" 
+                                                className="h-full w-full object-contain grayscale"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="relative z-10">
+                                    <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-center">
+                                        {job.company_logo_url && (
+                                            <div className="h-16 w-16 shrink-0 rounded-2xl border border-slate-100 bg-white p-2 shadow-sm flex items-center justify-center">
+                                                <img 
+                                                    src={job.company_logo_url} 
+                                                    alt={job.company}
+                                                    className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
+                                                />
+                                            </div>
+                                        )}
+                                        
+                                        <div className="flex-1">
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                <div>
+                                                    <h3 className="section-title text-2xl font-bold text-slate-950 md:text-3xl leading-tight">
+                                                        {job.role}
+                                                    </h3>
+                                                    <span className="mt-1 block text-lg font-medium text-slate-500">{job.company}</span>
+                                                </div>
+                                                <span className="rounded-full border border-slate-200 bg-white px-5 py-2 font-mono text-xs font-bold uppercase tracking-[0.16em] text-slate-600 shadow-sm">
+                                                    {job.period}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid lg:grid-cols-12 gap-10">
+                                        <div className="lg:col-span-12">
+                                            <p className="mb-8 max-w-4xl text-lg leading-8 text-slate-600">
+                                                {job.description}
+                                            </p>
+
+                                            <div className="space-y-4">
+                                                <h4 className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Key Deliverables</h4>
+                                                <ul className="grid md:grid-cols-2 gap-x-8 gap-y-4">
+                                                    {job.achievements.map((item, i) => (
+                                                        <li key={i} className="flex items-start gap-4 text-sm leading-7 text-slate-700">
+                                                            <span className="mt-2.5 h-2 w-2 shrink-0 rounded-full border-2 border-slate-900" />
+                                                            {item}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
-                            <p className="text-slate-400 mb-4 max-w-3xl leading-relaxed">
-                                {job.description}
-                            </p>
-
-                            <ul className="space-y-2">
-                                {job.achievements.map((item, i) => (
-                                    <li key={i} className="flex items-start gap-2 text-slate-300 text-sm">
-                                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-500/50" />
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
                         </motion.div>
                     ))}
                 </div>

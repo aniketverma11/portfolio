@@ -1,4 +1,3 @@
-'use client';
 
 import { useEffect, useState } from 'react';
 import Navbar from "@/components/Navbar";
@@ -10,30 +9,41 @@ import Blog from "@/components/Blog";
 import Achievements from "@/components/Achievements";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
+import Certifications from "@/components/Certifications";
 import Footer from "@/components/Footer";
-import { getPersonalData, getSkills, getExperience, getProjects, getAchievements, getBlogPosts } from "@/lib/api";
-import type { PersonalData, Skill, Experience as ExperienceType, Project, Achievement, BlogPost } from "@/lib/types";
+import { getPersonalData, getSkills, getExperience, getProjects, getAchievements, getBlogPosts, getCertifications } from "@/lib/api";
+import {
+  personalData as fallbackPersonalData,
+  skills as fallbackSkills,
+  experience as fallbackExperience,
+  projects as fallbackProjects,
+  achievements as fallbackAchievements,
+  certifications as fallbackCertifications,
+} from "@/lib/data";
+import type { PersonalData, Skill, Experience as ExperienceType, Project, Achievement, BlogPost, Certification } from "@/lib/types";
 
 export default function Home() {
-  const [personalData, setPersonalData] = useState<PersonalData | null>(null);
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [experience, setExperience] = useState<ExperienceType[]>([]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  // Initialize with fallback data so the page renders instantly
+  const [personalData, setPersonalData] = useState<PersonalData>(fallbackPersonalData as PersonalData);
+  const [skills, setSkills] = useState<Skill[]>(fallbackSkills as Skill[]);
+  const [experience, setExperience] = useState<ExperienceType[]>(fallbackExperience as ExperienceType[]);
+  const [projects, setProjects] = useState<Project[]>(fallbackProjects as Project[]);
+  const [achievements, setAchievements] = useState<Achievement[]>(fallbackAchievements as Achievement[]);
+  const [certifications, setCertifications] = useState<Certification[]>(fallbackCertifications as Certification[]);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Fetch real data in the background and update silently
     async function fetchData() {
       try {
-        const [personalDataRes, skillsRes, experienceRes, projectsRes, achievementsRes, blogPostsRes] = await Promise.all([
+        const [personalDataRes, skillsRes, experienceRes, projectsRes, achievementsRes, blogPostsRes, certificationsRes] = await Promise.all([
           getPersonalData(),
           getSkills(),
           getExperience(),
           getProjects(),
           getAchievements(),
           getBlogPosts(),
+          getCertifications(),
         ]);
 
         setPersonalData(personalDataRes);
@@ -42,46 +52,28 @@ export default function Home() {
         setProjects(projectsRes);
         setAchievements(achievementsRes);
         setBlogPosts(blogPostsRes);
+        
+        // Only update if we actually have data from the DB, otherwise keep fallback
+        if (certificationsRes && certificationsRes.length > 0) {
+          setCertifications(certificationsRes);
+        }
       } catch (err) {
         console.error('Error fetching data:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load data');
-      } finally {
-        setLoading(false);
+        // Fallback data is already displayed, so no need to show an error
       }
     }
 
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-slate-950 text-slate-200 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-cyan-500 border-r-transparent mb-4"></div>
-          <p className="text-lg">Loading portfolio...</p>
-        </div>
-      </main>
-    );
-  }
-
-  if (error || !personalData) {
-    return (
-      <main className="min-h-screen bg-slate-950 text-slate-200 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-500 mb-4">Error Loading Portfolio</h1>
-          <p className="text-slate-400">{error || 'Failed to load data'}</p>
-        </div>
-      </main>
-    );
-  }
-
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-200 selection:bg-cyan-500/30">
+    <main className="page-shell min-h-screen bg-slate-50 text-slate-900">
       <Navbar />
       <Hero data={personalData} />
       <Skills data={skills} />
       <Experience data={experience} />
       <Projects data={projects} />
+      <Certifications data={certifications} />
       <Blog data={blogPosts} />
       <Achievements data={achievements} />
       <About data={personalData} />

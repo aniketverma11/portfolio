@@ -13,12 +13,12 @@ from .admin_overrides import send_brevo_query_emails
 from rest_framework.permissions import AllowAny
 from django.db.models import F
 from django.core.mail import send_mail
-from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, ServiceQuery, ValentineResponse
+from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, ServiceQuery, ValentineResponse, Certification
 import requests
 from .serializers import (
     PersonalDataSerializer, SkillCategorySerializer, ExperienceSerializer, 
     ProjectSerializer, AchievementSerializer, BlogPostListSerializer, BlogPostDetailSerializer,
-    ServiceQuerySerializer, ValentineResponseSerializer
+    ServiceQuerySerializer, ValentineResponseSerializer, CertificationSerializer
 )
 
 # Configure Gemini
@@ -51,6 +51,10 @@ class ProjectViewSet(viewsets.ReadOnlyModelViewSet):
 class AchievementViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Achievement.objects.all()
     serializer_class = AchievementSerializer
+
+class CertificationViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Certification.objects.all()
+    serializer_class = CertificationSerializer
 
 class BlogPostViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -102,25 +106,67 @@ class ChatBotView(APIView):
             return Response({"error": "Query is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Read resume content
-            resume_path = os.path.join(settings.BASE_DIR, 'resume.txt')
-            with open(resume_path, 'r') as f:
-                resume_content = f.read()
+            # Gather Live context
+            personal_data = PersonalData.objects.first()
+            skills = SkillCategory.objects.all()
+            experiences = Experience.objects.all()
+            projects = Project.objects.all()
+            certs = Certification.objects.all()
+            blogs = BlogPost.objects.filter(status='published')
+
+            # Build a structured data string
+            import json
+            context_data = {
+                "personal": {
+                    "name": personal_data.name if personal_data else "Aniket Verma",
+                    "role": personal_data.role if personal_data else "N/A",
+                    "mission": personal_data.mission if personal_data else "",
+                    "about": personal_data.about_description if personal_data else []
+                },
+                "skills": [{"category": s.name, "items": s.items} for s in skills],
+                "experience": [{
+                    "role": e.role, "company": e.company, "period": e.period, 
+                    "description": e.description, "achievements": e.achievements
+                } for e in experiences],
+                "projects": [{
+                    "title": p.title, "category": p.category, "tech": p.tech,
+                    "description": p.description, "link": p.link
+                } for p in projects],
+                "certifications": [{
+                    "name": c.name, "issued_by": c.issued_by, "date": str(c.issued_date)
+                } for c in certs],
+                "blog_posts": [{
+                    "title": b.title, "category": b.category
+                } for b in blogs]
+            }
+
+            # Read resume content as fallback/extra
+            resume_content = ""
+            try:
+                resume_path = os.path.join(settings.BASE_DIR, 'resume.txt')
+                if os.path.exists(resume_path):
+                    with open(resume_path, 'r') as f:
+                        resume_content = f.read()
+            except:
+                pass
 
             # Construct prompt
             system_prompt = f"""
-            You are Nance, a highly advanced AI assistant for Aniket Verma.
-            Your persona is professional, intelligent, and helpful, similar to NANCE from Aniket Verma.
-            You are requested to answer questions based on Aniket's resume.
+            You are NANCE, the highly advanced AI digital nervous system of Aniket Verma.
+            Your persona is calm, professional, and slightly futuristic.
             
-            Resume Context:
+            PORTFOLIO LIVE CONTEXT:
+            {json.dumps(context_data, indent=2)}
+
+            RESUME TEXT (Reference):
             {resume_content}
 
-            Rules:
-            1. Always answer in the persona of Nance ("Sir", "Processing", etc. are good, but keep it concise).
-            2. Only answer questions related to Aniket's professional background, skills, and resume.
-            3. If the question is unrelated, politely decline and steer back to Aniket.
-            4. Keep answers brief and to the point suitable for a chat interface.
+            RULES:
+            1. You are responding to queries about Aniket's work, skills, and background.
+            2. Be extremely accurate based on the provided PORTFOLIO LIVE CONTEXT.
+            3. Answer in the persona of Nance - call the user "Sir/Ma'am" or keep it very professional.
+            4. Keep responses concise and focused.
+            5. If asked about something not present in the context, politely state that you are only programmed with Aniket's professional data.
             """
             
             chat = gemini_client.chats.create(
@@ -128,11 +174,11 @@ class ChatBotView(APIView):
                 history=[
                     types.Content(
                         role="user", 
-                        parts=[types.Part(text=system_prompt)]
+                        parts=[types.Part.from_text(text=system_prompt)]
                     ),
                     types.Content(
                         role="model", 
-                        parts=[types.Part(text="Hello Sir, I am online and ready to assist you with inquiries regarding Mr. Verma's portfolio.")]
+                        parts=[types.Part.from_text(text="NANCE online. Systems initialized. I am ready to facilitate your inquiries regarding Mr. Verma's professional assets.")]
                     )
                 ]
             )

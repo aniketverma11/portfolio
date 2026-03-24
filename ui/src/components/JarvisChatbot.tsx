@@ -1,22 +1,22 @@
-"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Cpu, Terminal, Volume2, VolumeX } from "lucide-react";
+import { X, Send, Terminal, Bot, User, MessageCircle } from "lucide-react";
 
 interface Message {
     id: number;
     text: string;
-    sender: "user" | "jarvis";
+    sender: "user" | "agent";
     isStreaming?: boolean;
 }
+
+const fullTooltipText = "Have a question? Ask Aniket's assistant.";
 
 const JarvisChatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isMuted, setIsMuted] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const socketRef = useRef<WebSocket | null>(null);
 
@@ -30,15 +30,9 @@ const JarvisChatbot = () => {
 
     useEffect(() => {
         if (isOpen && !socketRef.current) {
-            // Initialize WebSocket connection
-            const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "ws://127.0.0.1:8000/ws/chat/";
+            const wsUrl = import.meta.env.VITE_WS_URL || "ws://127.0.0.1:8000/ws/chat/";
             const ws = new WebSocket(wsUrl);
             socketRef.current = ws;
-
-            ws.onopen = () => {
-                console.log("Connected to Nance Terminal");
-            };
-
 
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
@@ -48,14 +42,14 @@ const JarvisChatbot = () => {
                     const botMessage: Message = {
                         id: Date.now(),
                         text: "",
-                        sender: "jarvis",
+                        sender: "agent",
                         isStreaming: true
                     };
                     setMessages((prev) => [...prev, botMessage]);
                 } else if (data.type === 'chunk') {
                     setMessages((prev) => {
                         const lastMsgIndex = prev.length - 1;
-                        if (lastMsgIndex >= 0 && prev[lastMsgIndex].sender === 'jarvis') {
+                        if (lastMsgIndex >= 0 && prev[lastMsgIndex].sender === 'agent') {
                             const updatedMsg = {
                                 ...prev[lastMsgIndex],
                                 text: prev[lastMsgIndex].text + data.content
@@ -69,132 +63,71 @@ const JarvisChatbot = () => {
                         const lastMsgIndex = prev.length - 1;
                         if (lastMsgIndex >= 0) {
                             const updatedMsg = { ...prev[lastMsgIndex], isStreaming: false };
-                            const newMessages = [...prev.slice(0, lastMsgIndex), updatedMsg];
-
-                            // Speak only after full message is received
-                            if (updatedMsg.sender === 'jarvis') {
-                                speak(updatedMsg.text);
-                            }
-                            return newMessages;
+                            return [...prev.slice(0, lastMsgIndex), updatedMsg];
                         }
                         return prev;
                     });
                 } else if (data.type === 'error' || data.error) {
-                    console.error("Jarvis Error:", data.error);
                     const errorMessage: Message = {
                         id: Date.now(),
-                        text: "Error processing request.",
-                        sender: "jarvis",
+                        text: "Something went wrong. Please try again.",
+                        sender: "agent",
                     };
                     setMessages((prev) => [...prev, errorMessage]);
-                    speak("Error processing request.");
                     setIsLoading(false);
                 } else if (data.message) {
-                    // Fallback for non-streaming messages
                     const botMessage: Message = {
                         id: Date.now(),
                         text: data.message,
-                        sender: "jarvis",
+                        sender: "agent",
                     };
                     setMessages((prev) => [...prev, botMessage]);
-                    speak(data.message);
                     setIsLoading(false);
                 }
             };
-
-
-            ws.onerror = (error) => {
-                console.error("WebSocket Error:", error);
-                const errorMessage: Message = {
-                    id: Date.now(),
-                    text: "Connection interrupted. Re-establishing uplink...",
-                    sender: "jarvis",
-                };
-                setMessages((prev) => [...prev, errorMessage]);
-                speak("Connection interrupted.");
+            
+            ws.onerror = () => {
                 setIsLoading(false);
             };
 
             ws.onclose = () => {
-                console.log("Disconnected from Jarvis Terminal");
                 socketRef.current = null;
             };
         }
 
         return () => {
-            if (!isOpen && socketRef.current) {
+            if (socketRef.current) {
                 socketRef.current.close();
                 socketRef.current = null;
             }
         };
     }, [isOpen]);
 
-
-    const speak = (text: string) => {
-        if (isMuted) return;
-
-        if ("speechSynthesis" in window) {
-            window.speechSynthesis.cancel();
-
-            // Clean markdown formatting before speaking
-            const cleanText = text.replace(/[*#`_]/g, '');
-
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            const voices = window.speechSynthesis.getVoices();
-
-            // Prioritize male voices
-            const preferredVoice = voices.find(
-                (voice) =>
-                    voice.name.includes("Male") ||
-                    voice.name.includes("David") ||
-                    voice.name.includes("Daniel") ||
-                    voice.name.includes("Google US English")
-            );
-            if (preferredVoice) utterance.voice = preferredVoice;
-
-            utterance.pitch = 0.8; // Deepen voice slightly
-            utterance.rate = 1.0;
-            window.speechSynthesis.speak(utterance);
-        }
-    };
-
-    const toggleMute = () => {
-        if (!isMuted) {
-            // If we are muting, stop any current speech
-            window.speechSynthesis.cancel();
-        }
-        setIsMuted(!isMuted);
-    };
-
-
-
     const [showTooltip, setShowTooltip] = useState(true);
     const [tooltipText, setTooltipText] = useState("");
-    const fullTooltipText = "Need info? I'm Nance Agent, Click to chat!";
 
     useEffect(() => {
-        if (showTooltip) {
-            let i = 0;
-            const interval = setInterval(() => {
-                setTooltipText(fullTooltipText.slice(0, i + 1));
-                i++;
-                if (i > fullTooltipText.length) {
-                    clearInterval(interval);
-                    // Hide tooltip after a delay (e.g., 10 seconds after typing finishes)
-                    setTimeout(() => setShowTooltip(false), 10000);
-                }
-            }, 50);
-            return () => clearInterval(interval);
-        }
-    }, []);
+        if (!showTooltip) return;
+
+        let i = 0;
+        const interval = setInterval(() => {
+            setTooltipText(fullTooltipText.slice(0, i + 1));
+            i++;
+            if (i > fullTooltipText.length) {
+                clearInterval(interval);
+                setTimeout(() => setShowTooltip(false), 8000);
+            }
+        }, 40);
+
+        return () => clearInterval(interval);
+    }, [showTooltip]);
 
     const handleOpen = () => {
         setIsOpen(true);
         setShowTooltip(false);
         if (messages.length === 0) {
-            const greeting = "Nance is online. I'm MR.Verma's personal assistant. How may I assist you, Sir?";
-            setMessages([{ id: 0, text: greeting, sender: "jarvis" }]);
-            speak(greeting);
+            const greeting = "Hello! I'm Aniket's assistant. You can ask me about his work experience, technical skills, or recent projects. How can I help you today?";
+            setMessages([{ id: 0, text: greeting, sender: "agent" }]);
         }
     };
 
@@ -217,41 +150,40 @@ const JarvisChatbot = () => {
         } else {
             const errorMessage: Message = {
                 id: Date.now() + 1,
-                text: "Uplink offline. Unable to transmit.",
-                sender: "jarvis"
+                text: "Assistant is currently offline. Please try again later.",
+                sender: "agent"
             };
             setMessages((prev) => [...prev, errorMessage]);
-            speak("Uplink offline.");
             setIsLoading(false);
         }
     };
 
     return (
         <>
-            {/* Floating Button - Always present container for proper fixed positioning */}
             {!isOpen && (
-                <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] flex flex-col items-end gap-2">
+                <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] flex flex-col items-end gap-3">
                     <AnimatePresence>
                         {showTooltip && (
                             <motion.div
-                                initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.9 }}
-                                className="relative bg-black/80 border border-cyan-500/50 text-cyan-400 px-3 py-2 rounded-lg backdrop-blur-md shadow-[0_0_15px_rgba(34,211,238,0.2)] mb-2 max-w-[180px] md:max-w-[200px]"
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                className="surface-card relative mb-2 max-w-[220px] rounded-2xl px-4 py-3 shadow-xl border border-slate-200"
                             >
-                                <p className="text-xs md:text-sm font-mono typing-cursor">{tooltipText}</p>
-                                {/* Arrow pointing down-right */}
-                                <div className="absolute -bottom-2 right-4 w-3 h-3 md:w-4 md:h-4 bg-black/80 border-r border-b border-cyan-500/50 transform rotate-45"></div>
+                                <p className="font-sans text-xs font-medium text-slate-700">{tooltipText}</p>
+                                <div className="absolute -bottom-1.5 right-6 h-3 w-3 rotate-45 bg-white border-b border-r border-slate-200"></div>
                             </motion.div>
                         )}
                     </AnimatePresence>
                     <motion.button
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
                         onClick={handleOpen}
-                        className="bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-400 border border-cyan-500/50 rounded-full p-3 md:p-4 shadow-[0_0_20px_rgba(34,211,238,0.3)] backdrop-blur-md transition-all group"
+                        className="h-14 w-14 md:h-16 md:w-16 flex items-center justify-center rounded-full bg-slate-950 text-white shadow-2xl transition-all hover:bg-slate-900 active:bg-black group border border-slate-800"
                     >
-                        <Cpu className="w-6 h-6 md:w-8 md:h-8 group-hover:rotate-180 transition-transform duration-700" />
+                        <MessageCircle className="h-6 w-6 md:h-7 md:w-7" />
                     </motion.button>
                 </div>
             )}
@@ -262,95 +194,119 @@ const JarvisChatbot = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        className="fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-[101] flex items-center justify-center p-4"
                     >
                         <motion.div
-                            initial={{ scale: 0.9, y: 20 }}
+                            initial={{ scale: 0.95, y: 20 }}
                             animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.9, y: 20 }}
-                            className="bg-black/90 border border-cyan-500/30 w-full max-w-2xl h-[600px] rounded-lg shadow-[0_0_50px_rgba(34,211,238,0.15)] flex flex-col font-mono relative overflow-hidden"
+                            exit={{ scale: 0.95, y: 20 }}
+                            className="relative flex h-[650px] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white font-sans shadow-2xl"
                         >
-                            {/* Scanline effect */}
-                            <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%] opacity-20"></div>
-
                             {/* Header */}
-                            <div className="flex justify-between items-center p-4 border-b border-cyan-500/20 bg-cyan-950/10 z-20">
-                                <div className="flex items-center gap-2 text-cyan-400">
-                                    <Terminal className="w-5 h-5" />
-                                    <span className="font-bold tracking-widest text-sm">ANIKET'S AGENT</span>
+                            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 p-5 px-8">
+                                <div className="flex items-center gap-4">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white shadow-lg">
+                                        <Bot className="h-6 w-6" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-sm font-bold text-slate-900 tracking-tight">Aniket's Assistant</h2>
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            <span className="text-[11px] font-medium text-slate-500">Ready to help</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <button
-                                        onClick={toggleMute}
-                                        className="text-cyan-500/50 hover:text-cyan-400 transition-colors"
-                                        title={isMuted ? "Unmute" : "Mute"}
-                                    >
-                                        {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-                                    </button>
-                                    <button
-                                        onClick={() => setIsOpen(false)}
-                                        className="text-cyan-500/50 hover:text-cyan-400 transition-colors"
-                                    >
-                                        <X className="w-6 h-6" />
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={() => setIsOpen(false)}
+                                    className="h-10 w-10 flex items-center justify-center rounded-full text-slate-400 transition-all hover:bg-slate-100 hover:text-slate-900"
+                                >
+                                    <X className="h-6 w-6" />
+                                </button>
                             </div>
 
-                            {/* Chat Area */}
-                            <div className="flex-1 overflow-y-auto p-4 space-y-4 z-20">
+                            {/* Messages area */}
+                            <div className="flex-1 space-y-6 overflow-y-auto p-6 px-8 scrollbar-thin scrollbar-thumb-slate-200">
                                 {messages.map((msg) => (
                                     <motion.div
-                                        initial={{ opacity: 0, x: msg.sender === "user" ? 20 : -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
                                         key={msg.id}
-                                        className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+                                        className={`flex gap-4 ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}
                                     >
+                                        <div className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${
+                                            msg.sender === "user" 
+                                            ? "border-slate-800 bg-slate-900" 
+                                            : "border-slate-200 bg-slate-50"
+                                        }`}>
+                                            {msg.sender === "user" ? <User className="h-4 w-4 text-slate-100" /> : <Terminal className="h-4 w-4 text-slate-600" />}
+                                        </div>
                                         <div
-                                            className={`max-w-[80%] p-3 rounded-lg border ${msg.sender === "user"
-                                                ? "bg-cyan-900/20 border-cyan-500/30 text-cyan-100"
-                                                : "bg-black border-cyan-500/50 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.1)]"
-                                                }`}
+                                            className={`relative max-w-[85%] rounded-2xl px-5 py-3.5 shadow-sm border ${
+                                                msg.sender === "user"
+                                                    ? "border-slate-800 bg-slate-900 text-white rounded-tr-none"
+                                                    : "border-slate-100 bg-slate-50/50 text-slate-800 rounded-tl-none"
+                                            }`}
                                         >
-                                            <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                                            <p className="text-sm leading-relaxed whitespace-pre-wrap">
                                                 {msg.text}
                                                 {msg.isStreaming && (
-                                                    <span className="inline-block w-2 h-4 bg-cyan-400 ml-1 animate-pulse" />
+                                                    <span className="ml-1 inline-block h-4 w-1.5 animate-pulse bg-slate-400 align-middle" />
                                                 )}
                                             </p>
                                         </div>
                                     </motion.div>
                                 ))}
                                 {isLoading && (
-                                    <div className="flex justify-start">
-                                        <div className="bg-black border border-cyan-500/50 text-cyan-400 p-3 rounded-lg shadow-[0_0_10px_rgba(34,211,238,0.1)] flex gap-2 items-center">
-                                            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
-                                            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse delay-100"></span>
-                                            <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse delay-200"></span>
+                                    <div className="flex flex-row gap-4">
+                                        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50">
+                                            <Terminal className="h-4 w-4 text-slate-600" />
+                                        </div>
+                                        <div className="flex items-center gap-1.5 rounded-2xl border border-slate-100 bg-slate-50/50 px-5 py-4">
+                                            <span className="text-xs font-medium text-slate-400 mr-1 italic">Agent is typing</span>
+                                            <motion.span 
+                                                animate={{ opacity: [0, 1, 0] }} 
+                                                transition={{ repeat: Infinity, duration: 1.5, times: [0, 0.5, 1] }} 
+                                                className="h-1 w-1 rounded-full bg-slate-400"
+                                            />
+                                            <motion.span 
+                                                animate={{ opacity: [0, 1, 0] }} 
+                                                transition={{ repeat: Infinity, duration: 1.5, times: [0, 0.5, 1], delay: 0.2 }} 
+                                                className="h-1 w-1 rounded-full bg-slate-400"
+                                            />
+                                            <motion.span 
+                                                animate={{ opacity: [0, 1, 0] }} 
+                                                transition={{ repeat: Infinity, duration: 1.5, times: [0, 0.5, 1], delay: 0.4 }} 
+                                                className="h-1 w-1 rounded-full bg-slate-400"
+                                            />
                                         </div>
                                     </div>
                                 )}
                                 <div ref={messagesEndRef} />
                             </div>
 
-                            {/* Input Area */}
-                            <form onSubmit={handleSubmit} className="p-4 border-t border-cyan-500/20 bg-cyan-950/5 z-20">
-                                <div className="flex gap-2">
+                            {/* Footer / Input */}
+                            <div className="border-t border-slate-100 bg-white p-6 px-8">
+                                <form onSubmit={handleSubmit} className="relative">
                                     <input
                                         type="text"
                                         value={query}
                                         onChange={(e) => setQuery(e.target.value)}
-                                        placeholder="ENTER COMMAND..."
-                                        className="flex-1 bg-black/50 border border-cyan-500/30 rounded px-4 py-3 text-cyan-100 placeholder-cyan-700/50 focus:outline-none focus:border-cyan-400/70 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] transition-all"
+                                        placeholder="Ask a question..."
+                                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-6 py-4 pl-14 text-sm text-slate-900 placeholder-slate-400 transition-all focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-4 focus:ring-slate-900/5"
                                     />
+                                    <MessageCircle className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
                                     <button
                                         type="submit"
-                                        disabled={isLoading}
-                                        className="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 rounded px-4 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        disabled={isLoading || !query.trim()}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl bg-slate-950 px-4 py-2.5 text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                                     >
-                                        <Send className="w-5 h-5" />
+                                        <Send className="h-4 w-4" />
                                     </button>
-                                </div>
-                            </form>
+                                </form>
+                                <p className="mt-4 text-center text-[10px] font-medium uppercase tracking-[0.2em] text-slate-400">
+                                    Powered by Aniket's Portfolio Agent
+                                </p>
+                            </div>
                         </motion.div>
                     </motion.div>
                 )}
