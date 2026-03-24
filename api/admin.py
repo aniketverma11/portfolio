@@ -15,7 +15,7 @@ class AdminOTPAdmin(admin.ModelAdmin):
 
 @admin.register(PersonalData)
 class PersonalDataAdmin(admin.ModelAdmin):
-    list_display = ('name', 'role', 'email')
+    list_display = ('name', 'role', 'email', 'location')
 
 @admin.register(SkillCategory)
 class SkillCategoryAdmin(admin.ModelAdmin):

@@ -9,7 +9,7 @@ class ServiceQuerySerializer(serializers.ModelSerializer):
 class PersonalDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalData
-        fields = ['name', 'role', 'tagline', 'mission']
+        fields = ['name', 'role', 'tagline', 'mission', 'location']
 
     def to_representation(self, instance):
         repr = super().to_representation(instance)

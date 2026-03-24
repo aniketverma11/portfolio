@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { motion, useAnimationControls } from "framer-motion";
-import { ChevronDown, Brain, Bot, Sparkles, Cpu } from "lucide-react";
+import { ChevronDown, Brain, Bot, Sparkles, Cpu, MapPin } from "lucide-react";
 import { SiPython, SiLangchain, SiOpenai, SiAnthropic, SiFastapi } from "react-icons/si";
 import { PersonalData } from "@/lib/types";
 
@@ -122,9 +122,15 @@ export default function Hero({ data }: { data: PersonalData }) {
                             <h1 className="section-title mb-6 text-4xl font-semibold leading-tight text-slate-950 sm:text-6xl lg:text-7xl">
                                 {personalData.name}
                             </h1>
-                            <h2 className="mb-6 max-w-3xl text-xl font-semibold text-slate-700 sm:text-2xl">
+                            <h2 className="mb-4 max-w-3xl text-xl font-semibold text-slate-700 sm:text-2xl">
                                 {personalData.tagline || personalData.role}
                             </h2>
+                            {personalData.location && (
+                                <div className="mb-6 flex items-center gap-2 text-slate-500 font-medium">
+                                    <MapPin className="h-4 w-4" />
+                                    <span>{personalData.location}</span>
+                                </div>
+                            )}
                             <p className="max-w-3xl text-base leading-8 text-slate-600 sm:text-lg">
                                 {personalData.mission}
                             </p>

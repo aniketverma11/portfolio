@@ -3,6 +3,7 @@ export interface PersonalData {
     role: string;
     tagline: string;
     mission: string;
+    location: string;
     about: {
         title: string;
         description: string[];
