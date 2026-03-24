@@ -1,17 +1,103 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { motion, useAnimationControls } from "framer-motion";
+import { ChevronDown, Brain, Bot, Sparkles, Cpu } from "lucide-react";
+import { SiPython, SiLangchain, SiOpenai, SiAnthropic, SiFastapi } from "react-icons/si";
 import { PersonalData } from "@/lib/types";
+
+const floatingIcons = [
+    { icon: <SiPython />, className: "text-[#3776AB]", top: "12%", left: "5%", size: "w-14 h-14 lg:w-20 lg:h-20", iconSize: "text-2xl lg:text-4xl", duration: 5, label: "Python" },
+    { icon: <SiLangchain />, className: "text-[#1C3C3C]", top: "68%", left: "8%", size: "w-16 h-16 lg:w-[5.5rem] lg:h-[5.5rem]", iconSize: "text-3xl lg:text-5xl", duration: 6, label: "LangChain" },
+    { icon: <SiOpenai />, className: "text-slate-900", top: "15%", right: "5%", size: "w-14 h-14 lg:w-[4.5rem] lg:h-[4.5rem]", iconSize: "text-2xl lg:text-4xl", duration: 5.5, label: "OpenAI" },
+    { icon: <Brain />, className: "text-purple-500", top: "72%", right: "8%", size: "w-16 h-16 lg:w-24 lg:h-24", iconSize: "text-3xl lg:text-5xl", duration: 7, label: "AI/ML" },
+    { icon: <Sparkles />, className: "text-amber-500", top: "6%", right: "22%", size: "w-12 h-12 lg:w-16 lg:h-16", iconSize: "text-xl lg:text-3xl", duration: 4, label: "Magic" },
+    { icon: <Bot />, className: "text-blue-500", top: "82%", left: "28%", size: "w-14 h-14 lg:w-20 lg:h-20", iconSize: "text-2xl lg:text-4xl", duration: 6.5, label: "Agents" },
+    { icon: <SiAnthropic />, className: "text-[#D97757]", top: "42%", left: "2%", size: "w-12 h-12 lg:w-16 lg:h-16", iconSize: "text-xl lg:text-3xl", duration: 5.2, label: "Anthropic" },
+    { icon: <SiFastapi />, className: "text-[#05998B]", top: "48%", right: "3%", size: "w-14 h-14 lg:w-[4.5rem] lg:h-[4.5rem]", iconSize: "text-2xl lg:text-4xl", duration: 5.8, label: "FastAPI" },
+];
+
+function DraggableIcon({ item, idx, containerRef }: { item: typeof floatingIcons[0]; idx: number; containerRef: React.RefObject<HTMLDivElement | null> }) {
+    const [isDragging, setIsDragging] = useState(false);
+    const [hasAppeared, setHasAppeared] = useState(false);
+    const controls = useAnimationControls();
+
+    // Start the floating animation after initial appearance
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setHasAppeared(true);
+            controls.start({
+                opacity: 1,
+                scale: 1,
+                transition: { 
+                    type: "spring",
+                    stiffness: 260,
+                    damping: 20,
+                }
+            });
+        }, 300 + idx * 150);
+        return () => clearTimeout(timer);
+    }, [idx, controls]);
+
+    return (
+        // Outer wrapper: positioned absolutely, handles the CSS float animation
+        <div
+            style={{
+                position: 'absolute',
+                top: item.top,
+                left: item.left,
+                right: item.right,
+                animation: hasAppeared && !isDragging
+                    ? `iconFloat${idx % 4} ${item.duration}s ease-in-out ${idx * 0.4}s infinite`
+                    : 'none',
+            }}
+        >
+            {/* Inner draggable element */}
+            <motion.div
+                drag
+                dragConstraints={containerRef}
+                dragElastic={0.3}
+                dragMomentum={true}
+                dragTransition={{ bounceStiffness: 200, bounceDamping: 15 }}
+                onDragStart={() => setIsDragging(true)}
+                onDragEnd={() => setIsDragging(false)}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={controls}
+                whileHover={{ scale: 1.2, boxShadow: "0 20px 40px rgba(0,0,0,0.15)" }}
+                whileDrag={{ scale: 0.9, boxShadow: "0 30px 60px rgba(0,0,0,0.2)", zIndex: 50 }}
+                whileTap={{ scale: 0.95 }}
+                style={{ 
+                    cursor: isDragging ? 'grabbing' : 'grab',
+                    touchAction: 'none',
+                }}
+                className={`flex flex-col items-center justify-center gap-1 rounded-2xl lg:rounded-3xl bg-white/90 p-3 lg:p-5 backdrop-blur-xl border border-slate-200/80 shadow-xl hover:shadow-2xl select-none ${item.size} ${item.className} transition-shadow duration-300`}
+            >
+                <span className={`${item.iconSize} pointer-events-none`}>{item.icon}</span>
+                <span className="text-[8px] lg:text-[10px] font-bold uppercase tracking-wider text-slate-400 pointer-events-none">{item.label}</span>
+            </motion.div>
+        </div>
+    );
+}
 
 export default function Hero({ data }: { data: PersonalData }) {
     const personalData = data;
+    const containerRef = useRef<HTMLDivElement>(null);
     return (
         <section
             id="hero"
             className="relative flex min-h-screen items-center justify-center overflow-hidden pt-24"
         >
-            <div className="absolute inset-0 z-0">
+            {/* Background elements & Floating Icons */}
+            <div ref={containerRef} className="absolute inset-0 z-0">
                 <div className="absolute left-1/2 top-24 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-slate-200/70 blur-3xl" />
+                
+                {floatingIcons.map((item, idx) => (
+                    <DraggableIcon
+                        key={idx}
+                        item={item}
+                        idx={idx}
+                        containerRef={containerRef}
+                    />
+                ))}
+
                 <div className="absolute bottom-16 left-16 h-40 w-40 rounded-full border border-slate-300/70 bg-white/70" />
                 <div className="absolute right-16 top-28 h-56 w-56 rounded-3xl border border-slate-300/70 bg-slate-100/80" />
             </div>
@@ -67,16 +153,13 @@ export default function Hero({ data }: { data: PersonalData }) {
                                         Snapshot
                                     </span>
                                 </div>
-                                {/* <span className="rounded-lg bg-slate-100 px-3 py-1.5 font-mono text-[10px] font-bold text-slate-600 border border-slate-200">
-                                    profile.ts
-                                </span> */}
                             </div>
 
                             <div className="space-y-5 pt-6">
                                 <div>
                                     <div className="flex items-center gap-2 mb-2">
                                         <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-slate-900 text-white">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="1"/></svg>
+                                            <Cpu className="h-3.5 w-3.5" />
                                         </div>
                                         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-slate-400">Current focus</p>
                                     </div>
