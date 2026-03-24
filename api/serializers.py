@@ -7,9 +7,19 @@ class ServiceQuerySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PersonalDataSerializer(serializers.ModelSerializer):
+    profile_photo_url = serializers.SerializerMethodField()
+
     class Meta:
         model = PersonalData
-        fields = ['name', 'role', 'tagline', 'mission', 'location']
+        fields = ['name', 'role', 'tagline', 'mission', 'location', 'profile_photo', 'profile_photo_url']
+
+    def get_profile_photo_url(self, obj):
+        if obj.profile_photo:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.profile_photo.url)
+            return obj.profile_photo.url
+        return None
 
     def to_representation(self, instance):
         repr = super().to_representation(instance)

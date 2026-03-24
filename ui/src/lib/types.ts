@@ -4,6 +4,7 @@ export interface PersonalData {
     tagline: string;
     mission: string;
     location: string;
+    profile_photo_url: string | null;
     about: {
         title: string;
         description: string[];

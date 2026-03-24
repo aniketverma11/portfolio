@@ -4,6 +4,7 @@ export const personalData = {
     tagline: "Building Corporate AI Agents & Scalable Systems",
     mission: "I build cinematic, high-performance web applications and intelligent AI agents that solve real-world problems.",
     location: "Noida, India",
+    profile_photo_url: null,
     about: {
         title: "Engineering Philosophy",
         description: [

@@ -15,6 +15,7 @@ class PersonalData(models.Model):
     github = models.URLField(blank=True, null=True)
     resume = models.FileField(upload_to='resumes/', blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True, help_text="e.g. Noida, India")
+    profile_photo = models.ImageField(upload_to='profile/', blank=True, null=True)
 
     def __str__(self):
         return self.name

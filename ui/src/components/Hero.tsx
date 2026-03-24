@@ -111,6 +111,21 @@ export default function Hero({ data }: { data: PersonalData }) {
                 >
                     <div className="grid gap-12 lg:grid-cols-[1.45fr_0.9fr] lg:items-center">
                         <div>
+                            {personalData.profile_photo_url && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ duration: 0.5 }}
+                                    className="mb-8 h-28 w-28 rounded-full border-4 border-white shadow-2xl overflow-hidden bg-slate-100"
+                                >
+                                    <img 
+                                        src={personalData.profile_photo_url} 
+                                        alt={personalData.name}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </motion.div>
+                            )}
+
                             <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-slate-300 bg-white/90 px-4 py-2">
                                 <span className="h-2 w-2 rounded-full bg-emerald-500" />
                                 <span className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">
