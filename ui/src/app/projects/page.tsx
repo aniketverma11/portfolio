@@ -14,6 +14,16 @@ export default function ProjectsPage() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
     useEffect(() => {
+        const root = window.document.documentElement;
+        if (selectedProject) {
+            root.classList.add('no-scroll');
+        } else {
+            root.classList.remove('no-scroll');
+        }
+        return () => { root.classList.remove('no-scroll'); };
+    }, [selectedProject]);
+
+    useEffect(() => {
         async function fetchProjects() {
             try {
                 const data = await getProjects();
@@ -118,10 +128,10 @@ export default function ProjectsPage() {
 
             <AnimatePresence>
                 {selectedProject && (
-                    <div className="fixed inset-0 z-[3000] flex justify-center bg-slate-950/40 p-4 md:p-8 backdrop-blur-md overflow-y-auto">
+                    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-start bg-slate-950/40 p-4 md:p-8 backdrop-blur-md overflow-y-auto overscroll-contain">
                         <motion.div
                             layoutId={`project-full-${projects.indexOf(selectedProject)}`}
-                            className="relative w-full max-w-3xl my-auto rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl overflow-hidden"
+                            className="relative w-full max-w-3xl my-8 rounded-[2.5rem] border border-slate-200 bg-white shadow-2xl overflow-hidden shrink-0"
                         >
                             <button
                                 onClick={(e) => { e.stopPropagation(); setSelectedProject(null); }}

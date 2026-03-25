@@ -5,6 +5,10 @@ export interface PersonalData {
     mission: string;
     location: string;
     profile_photo_url: string | null;
+    core_tech_stack?: string[];
+    current_focus?: string;
+    working_style?: string;
+    primary_deliverable?: string;
     about: {
         title: string;
         description: string[];

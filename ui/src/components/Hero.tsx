@@ -185,7 +185,7 @@ export default function Hero({ data }: { data: PersonalData }) {
                                         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-slate-400">Current focus</p>
                                     </div>
                                     <p className="text-sm leading-6 text-slate-700 font-medium">
-                                        Corporate AI Agents, workflow automation, and backend systems.
+                                        {personalData.current_focus || "Corporate AI Agents, workflow automation, and backend systems."}
                                     </p>
                                 </div>
 
@@ -197,7 +197,7 @@ export default function Hero({ data }: { data: PersonalData }) {
                                         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-slate-400">Working style</p>
                                     </div>
                                     <p className="text-sm leading-6 text-slate-700 font-medium">
-                                        Product-minded execution emphasizing scalability and delivery.
+                                        {personalData.working_style || "Product-minded execution emphasizing scalability and delivery."}
                                     </p>
                                 </div>
 
@@ -205,7 +205,7 @@ export default function Hero({ data }: { data: PersonalData }) {
                                     <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4">
                                         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-slate-400 mb-3">Core technology stack</p>
                                         <div className="flex flex-wrap gap-1.5">
-                                            {["Python", "LangChain", "FastAPI", "PostgreSQL", "React", "Docker"].map(tech => (
+                                            {(personalData.core_tech_stack?.length ? personalData.core_tech_stack : ["Python", "LangChain", "FastAPI", "PostgreSQL", "React", "Docker"]).map(tech => (
                                                 <span key={tech} className="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[10px] font-bold text-slate-700 shadow-sm">
                                                     {tech}
                                                 </span>
@@ -216,7 +216,7 @@ export default function Hero({ data }: { data: PersonalData }) {
                                     <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 flex items-center justify-between">
                                         <div>
                                             <p className="font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-slate-400 mb-0.5">Primary Deliverable</p>
-                                            <p className="text-sm font-bold text-slate-900 tracking-tight">Scalable Business Systems</p>
+                                            <p className="text-sm font-bold text-slate-900 tracking-tight">{personalData.primary_deliverable || "Scalable Business Systems"}</p>
                                         </div>
                                         <div className="h-8 w-8 flex items-center justify-center rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-600">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>

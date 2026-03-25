@@ -11,7 +11,7 @@ class PersonalDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PersonalData
-        fields = ['name', 'role', 'tagline', 'mission', 'location', 'profile_photo', 'profile_photo_url']
+        fields = ['name', 'role', 'tagline', 'mission', 'location', 'profile_photo', 'profile_photo_url', 'core_tech_stack', 'current_focus', 'working_style', 'primary_deliverable']
 
     def get_profile_photo_url(self, obj):
         if obj.profile_photo:

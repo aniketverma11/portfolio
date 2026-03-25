@@ -50,10 +50,11 @@ export default function Navbar() {
         window.addEventListener("scroll", handleScroll);
         document.addEventListener("mousedown", handleClickOutside);
         
+        const root = window.document.documentElement;
         if (isOpen) {
-            document.body.style.overflow = "hidden";
+            root.classList.add("no-scroll");
         } else {
-            document.body.style.overflow = "unset";
+            root.classList.remove("no-scroll");
         }
 
         // Google Translate initialization
@@ -81,7 +82,7 @@ export default function Navbar() {
         return () => {
             window.removeEventListener("scroll", handleScroll);
             document.removeEventListener("mousedown", handleClickOutside);
-            document.body.style.overflow = "unset";
+            window.document.documentElement.classList.remove("no-scroll");
         };
     }, [isOpen]);
 

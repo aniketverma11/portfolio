@@ -12,6 +12,13 @@ body {
   --font-mono: "IBM Plex Mono", monospace;
 }
 
+.no-scroll {
+  overflow: hidden !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  position: fixed !important;
+}
+
 :root {
   --background: #f5f7fa;
   --foreground: #0f172a;

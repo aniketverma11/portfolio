@@ -5,6 +5,10 @@ export const personalData = {
     mission: "I build cinematic, high-performance web applications and intelligent AI agents that solve real-world problems.",
     location: "Noida, India",
     profile_photo_url: null,
+    core_tech_stack: ["Python", "LangChain", "FastAPI", "PostgreSQL", "React", "Docker"],
+    current_focus: "Corporate AI Agents, workflow automation, and backend systems.",
+    working_style: "Product-minded execution emphasizing scalability and delivery.",
+    primary_deliverable: "Scalable Business Systems",
     about: {
         title: "Engineering Philosophy",
         description: [

@@ -16,6 +16,10 @@ class PersonalData(models.Model):
     resume = models.FileField(upload_to='resumes/', blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True, help_text="e.g. Noida, India")
     profile_photo = models.ImageField(upload_to='profile/', blank=True, null=True)
+    core_tech_stack = models.JSONField(default=list, blank=True, null=True)
+    current_focus = models.CharField(max_length=500, blank=True, null=True)
+    working_style = models.CharField(max_length=500, blank=True, null=True)
+    primary_deliverable = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
