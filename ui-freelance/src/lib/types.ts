@@ -49,6 +49,7 @@ export interface Project {
     link: string;
     image?: string | null;
     image_url?: string | null;
+    project_type: 'main' | 'freelance';
 }
 
 export interface Achievement {

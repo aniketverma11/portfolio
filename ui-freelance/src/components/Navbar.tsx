@@ -4,15 +4,11 @@ import { Menu, X, Languages, Globe, ChevronDown } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const navLinks = [
-    { name: "Home", href: "/#hero" },
-    { name: "Skills", href: "/#skills" },
-    { name: "Experience", href: "/#experience" },
-    { name: "Projects", href: "/projects" },
-    { name: "Certifications", href: "/certifications" },
-    { name: "Blog", href: "/blog" },
-    { name: "Results", href: "/#achievements" },
+    { name: "Projects", href: "/#projects" },
     { name: "About", href: "/#about" },
-    { name: "Contact", href: "/#contact" },
+    { name: "Guidance", href: "/#guidance" },
+    { name: "Teaching", href: "/#teaching" },
+    { name: "Main Portfolio", href: "https://aniketverma.xyz" },
 ];
 
 const languages = [

@@ -14,6 +14,12 @@ class PersonalData(models.Model):
     linkedin = models.URLField(blank=True, null=True)
     github = models.URLField(blank=True, null=True)
     resume = models.FileField(upload_to='resumes/', blank=True, null=True)
+    location = models.CharField(max_length=255, blank=True, null=True, help_text="e.g. Noida, India")
+    profile_photo = models.ImageField(upload_to='profile/', blank=True, null=True)
+    core_tech_stack = models.JSONField(default=list, blank=True, null=True)
+    current_focus = models.CharField(max_length=500, blank=True, null=True)
+    working_style = models.CharField(max_length=500, blank=True, null=True)
+    primary_deliverable = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -37,6 +43,11 @@ class Experience(models.Model):
     def __str__(self):
         return f"{self.role} at {self.company}"
 
+PROJECT_TYPE_CHOICES = [
+    ('main', 'Main Portfolio'),
+    ('freelance', 'Freelance Portfolio'),
+]
+
 class Project(models.Model):
     title = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
@@ -44,6 +55,12 @@ class Project(models.Model):
     tech = models.JSONField(default=list)
     link = models.CharField(max_length=500, blank=True)
     image = models.ImageField(upload_to='projects/', blank=True, null=True)
+    project_type = models.CharField(
+        max_length=20, 
+        choices=PROJECT_TYPE_CHOICES, 
+        default='main',
+        help_text="Select where this project should be displayed"
+    )
 
     def __str__(self):
         return self.title
