@@ -46,6 +46,7 @@ class Experience(models.Model):
 PROJECT_TYPE_CHOICES = [
     ('main', 'Main Portfolio'),
     ('freelance', 'Freelance Portfolio'),
+    ('both', 'Both Portfolios'),
 ]
 
 class Project(models.Model):

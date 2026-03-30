@@ -43,7 +43,7 @@ export default function Home() {
         fetchData();
     }, []);
 
-    const freelanceProjects = projects.filter(p => p.project_type === 'freelance');
+    const freelanceProjects = projects.filter(p => p.project_type === 'freelance' || p.project_type === 'both');
 
     return (
         <main className="page-shell min-h-screen text-slate-900">

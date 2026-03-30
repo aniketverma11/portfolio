@@ -27,7 +27,8 @@ export default function ProjectsPage() {
         async function fetchProjects() {
             try {
                 const data = await getProjects();
-                setProjects(data);
+                const filteredData = data.filter((p: Project) => p.project_type === 'main' || p.project_type === 'both');
+                setProjects(filteredData);
             } catch (error) {
                 console.error('Failed to fetch projects', error);
             } finally {

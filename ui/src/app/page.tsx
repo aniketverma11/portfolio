@@ -49,7 +49,8 @@ export default function Home() {
         setPersonalData(personalDataRes);
         setSkills(skillsRes);
         setExperience(experienceRes);
-        setProjects(projectsRes);
+        const filteredProjects = projectsRes.filter((p: Project) => p.project_type === 'main' || p.project_type === 'both');
+        setProjects(filteredProjects);
         setAchievements(achievementsRes);
         setBlogPosts(blogPostsRes);
         
