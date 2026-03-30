@@ -1,0 +1,302 @@
+@import "tailwindcss";
+
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  scroll-behavior: smooth;
+}
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+.no-scroll {
+  overflow: hidden !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  position: fixed !important;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --border: #dbe3ee;
+  --surface: #ffffff;
+  --surface-subtle: #eef3f8;
+  --accent: #0f172a;
+  --accent-soft: #334155;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  background-image: 
+    linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 999px;
+  border: 2px solid #e2e8f0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.surface-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.page-shell {
+  background-image: 
+    linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
+}
+
+.section-title {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  letter-spacing: -0.04em;
+}
+
+.section-kicker {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.container-frame {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.06);
+}
+
+/* Blog Post Content Styles */
+.blog-content {
+  color: #334155;
+  line-height: 1.75;
+}
+
+.blog-content h2 {
+  color: #0f172a;
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.blog-content h3 {
+  color: #0f172a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-content p {
+  color: #334155;
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+
+.blog-content a {
+  color: #0f172a;
+  text-decoration: none;
+  border-bottom: 1px solid #94a3b8;
+}
+
+.blog-content a:hover {
+  color: #334155;
+}
+
+.blog-content strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.blog-content code {
+  color: #0f172a;
+  background-color: #e2e8f0;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.blog-content pre {
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.blog-content pre code {
+  background-color: transparent;
+  padding: 0;
+  color: #e2e8f0;
+}
+
+.blog-content ul,
+.blog-content ol {
+  color: #334155;
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.blog-content ul {
+  list-style-type: disc;
+}
+
+.blog-content ol {
+  list-style-type: decimal;
+}
+
+.blog-content li {
+  margin: 0.5rem 0;
+}
+
+.blog-content li::marker {
+  color: #64748b;
+}
+
+.blog-content img {
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+}
+
+.blog-content blockquote {
+  border-left: 4px solid #94a3b8;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #475569;
+  font-style: italic;
+}
+
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.blog-content th,
+.blog-content td {
+  border: 1px solid #cbd5e1;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.blog-content th {
+  background-color: #e2e8f0;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.blog-content td {
+  color: #334155;
+}
+
+.blog-content hr {
+  border: none;
+  border-top: 1px solid #cbd5e1;
+  margin: 2rem 0;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating icon animations — 4 variations for organic movement */
+@keyframes iconFloat0 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-14px) translateX(4px); }
+  50% { transform: translateY(-6px) translateX(-3px); }
+  75% { transform: translateY(-18px) translateX(2px); }
+}
+
+@keyframes iconFloat1 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  30% { transform: translateY(-20px) translateX(-5px); }
+  60% { transform: translateY(-8px) translateX(6px); }
+}
+
+@keyframes iconFloat2 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  20% { transform: translateY(-10px) translateX(6px); }
+  50% { transform: translateY(-22px) translateX(-2px); }
+  80% { transform: translateY(-6px) translateX(4px); }
+}
+
+@keyframes iconFloat3 {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  35% { transform: translateY(-16px) translateX(-6px); }
+  65% { transform: translateY(-24px) translateX(3px); }
+}
+
+/* Hide Google Translate Banner and fix body shift */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure navbar stays on top */
+nav {
+  z-index: 9999 !important;
+}

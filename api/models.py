@@ -43,6 +43,11 @@ class Experience(models.Model):
     def __str__(self):
         return f"{self.role} at {self.company}"
 
+PROJECT_TYPE_CHOICES = [
+    ('main', 'Main Portfolio'),
+    ('freelance', 'Freelance Portfolio'),
+]
+
 class Project(models.Model):
     title = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
@@ -50,6 +55,12 @@ class Project(models.Model):
     tech = models.JSONField(default=list)
     link = models.CharField(max_length=500, blank=True)
     image = models.ImageField(upload_to='projects/', blank=True, null=True)
+    project_type = models.CharField(
+        max_length=20, 
+        choices=PROJECT_TYPE_CHOICES, 
+        default='main',
+        help_text="Select where this project should be displayed"
+    )
 
     def __str__(self):
         return self.title

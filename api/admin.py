@@ -28,8 +28,8 @@ class ExperienceAdmin(admin.ModelAdmin):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category')
-    list_filter = ('category',)
+    list_display = ('title', 'category', 'project_type')
+    list_filter = ('category', 'project_type')
 
 @admin.register(Achievement)
 class AchievementAdmin(admin.ModelAdmin):
