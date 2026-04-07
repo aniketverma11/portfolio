@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils import timezone
-from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, AdminOTP, ServiceQuery, ValentineResponse, Certification
+from .models import PersonalData, SkillCategory, Experience, Project, Achievement, BlogPost, AdminOTP, ServiceQuery, ValentineResponse, Certification, UploadedFile
 
 @admin.register(ServiceQuery)
 class ServiceQueryAdmin(admin.ModelAdmin):
@@ -87,3 +87,16 @@ class ValentineResponseAdmin(admin.ModelAdmin):
 class CertificationAdmin(admin.ModelAdmin):
     list_display = ('name', 'issued_by', 'certification_id')
     search_fields = ('name', 'issued_by', 'certification_id')
+
+@admin.register(UploadedFile)
+class UploadedFileAdmin(admin.ModelAdmin):
+    list_display = ('name', 'file', 'uploaded_at', 'download_link')
+    search_fields = ('name', 'file')
+    readonly_fields = ('uploaded_at', 'download_link')
+
+    def download_link(self, obj):
+        if obj.file:
+            from django.utils.html import format_html
+            return format_html('<a href="{0}" download>Download</a>'.format(obj.file.url))
+        return "No file"
+    download_link.short_description = "Download Link"

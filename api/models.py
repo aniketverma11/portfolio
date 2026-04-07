@@ -161,3 +161,15 @@ class Certification(models.Model):
 
     def __str__(self):
         return self.name
+
+class UploadedFile(models.Model):
+    file = models.FileField(upload_to='uploads/%Y/%m/%d/')
+    name = models.CharField(max_length=255, blank=True, help_text="Optional name for the file")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name or str(self.file.name)
+
+    class Meta:
+        verbose_name = "Uploaded File"
+        verbose_name_plural = "Uploaded Files"
